@@ -4,7 +4,7 @@
 
 **Present**: 
 - Rhys Stewart (Me, Student) 
-- Tom Huth (Student) =
+- Tom Huth (Student) 
 - Samuel McDonald (Student)
 - Hon Nam Li (Student)
 - Viraj Pankaj Jain (Student)
@@ -106,10 +106,6 @@
     Answer: No.
     <br><br>
 
-- **Is the end goal of this project a proof of concept prototype or as a sustainable basis for future development?**
-
-    Answer: 
-    <br><br>
 
 - **Do you have any seed papers?**:
 

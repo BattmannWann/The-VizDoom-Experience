@@ -7,7 +7,7 @@
 
 ---
 
-The following is a week-by-week plan for the whole project, that will be updated during project completion. This will include notes on actions that have/haven't been completed, along with a list of any appropriate actions or notes taken. 
+The following is a week-by-week plan for the whole project, that will be updated during project completion. This will include appropriate information on where to find/see any progress and whether or not the actions have been completed or postponed to a following week.
 
 `NOTE: Any notes that have been taken will be featured under the repository` [wiki]()
 
@@ -22,14 +22,13 @@ See the following:
     
     3. Research additional APIs similar to VizDOOM and solidify project directions; i.e. decide if using VizDOOM, finish project plan, and create a level 1 specification. 
     
-    4. Create a project repository on GitHub, using the provided template. Ensure to add supervisor to the repository.
+    4. Create a project repository on GitHub, using the provided template. Ensure to add supervisor to the repository. - ***COMPLETED***
 
     5. Attend meeting with supervisor, take meeting minutes, and get questions answered. ***COMPLETED***
 
-    6. Research how to implement and use any concepts identified in the notes, these will be listed below on identification and completion:
+    6. Research how to implement and use any concepts identified in the notes
 
-        - What are CNNs? How are they used?
-        - What are Neural Networks? How are they implemented?
+    7. Begin project dissertation - using overleaf
 
 * **Week 2**
 * **Week 3**
