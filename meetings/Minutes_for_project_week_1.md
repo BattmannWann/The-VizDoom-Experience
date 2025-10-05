@@ -22,7 +22,7 @@
 
 - I have begun learning what Neural Networks are and how to create them
 
-- I have successfully installed the VizDoom repository and have managed to launch their `basic.py` script to ensure that everything has been set up correctly
+- I have successfully installed the ViZDoom repository and have managed to launch their `basic.py` script to ensure that everything has been set up correctly
 
 ---
 
@@ -50,11 +50,6 @@
 
 ### Questions:
 
-- **What would an A-level project look like?**
-
-    Answer:
-    <br><br>
-
 - **At what time every week are you available to have a meeting? Are you able to dedicate the same time or would regular email correspondence work better?**
 
     Answer: Thursdays, in person is the aim. This will be ironed out and communicated as soon as possible
@@ -62,7 +57,7 @@
 
 - **Here is my understanding of the project so far:**
 
-    1. Design test scenarios/environments where small improvements in vision systems can be clearly measured - This would involve Developing VizDoom Test Scenarios (The Evaluation Suite)
+    1. Design test scenarios/environments where small improvements in vision systems can be clearly measured - This would involve Developing ViZDoom Test Scenarios (The Evaluation Suite)
 
     2. Build or adapt a vision system that can interact with that environment - create CNNs with reinforcement learning to tackle the problems. This would use libraries like PyTorch
 
@@ -117,7 +112,7 @@
 
 ### Objectives for this Week:
 
-- Compare other game engine APIs similar to VizDoom before making the concrete decision to use VizDoom
+- Compare other game engine APIs similar to ViZDoom before making the concrete decision to use ViZDoom
 
 - Begin the dissertation template 
 - Initiate the project repository on GitHub
@@ -131,3 +126,12 @@
     - The realistic goal within the scope of the project (the what)
     - The high level features to be implemented (the detail)
     - The minimum viable product (MVP) (the priorities)
+
+
+---
+
+### Additional Notes
+
+- **IMPORTANT NOTE**: supervisor emailed at 02:06 in the morning to arrange a meeting with all his students he is supervising. Further details can be seen here:
+
+    ![Email](Email_24_09_25.png)
