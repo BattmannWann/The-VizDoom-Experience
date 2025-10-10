@@ -1,4 +1,4 @@
-# Meeting Notes for Project Week 1
+# Meeting Notes for Project Week 2
 
 ## September 24th, 2025
 
