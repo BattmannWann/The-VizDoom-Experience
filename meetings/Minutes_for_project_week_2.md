@@ -44,12 +44,4 @@ Due to time constraints from a rushed recovery of meeting, there was inadequate 
 
 ---
 
-### Additional Notes
-
-- Supervisor emailed at 01:55 in the morning to arrange a meeting. See below:
-
-    ![Email](Email_02_10_25.png)
-
-    I was unable to attend due to conflicts with my university schedule. An alternative meeting was agreed for the day after (Friday the 3rd at 14:00), however, the supervisor did not attend and provided no notification to communicate this. 
-
 

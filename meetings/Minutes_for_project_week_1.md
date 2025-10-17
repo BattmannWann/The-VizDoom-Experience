@@ -129,9 +129,3 @@
 
 
 ---
-
-### Additional Notes
-
-- **IMPORTANT NOTE**: supervisor emailed at 02:06 in the morning to arrange a meeting with all his students he is supervising. Further details can be seen here:
-
-    ![Email](Email_24_09_25.png)
