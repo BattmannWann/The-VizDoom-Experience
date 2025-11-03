@@ -34,9 +34,9 @@ See the following:
 * **Week 2: Baseline Model Scaffolding**
     * **Tasks:** 
 
-        1. Install ViZDoom and all required libraries (PyTorch, etc.). Run the provided example scenarios to ensure the environment is working correctly. Familiarize yourself with the ViZDoom API (state/action spaces, rewards).
+        1. Install ViZDoom and all required libraries (PyTorch, etc.). Run the provided example scenarios to ensure the environment is working correctly. Familiarize yourself with the ViZDoom API (state/action spaces, rewards). ***COMPLETED***
 
-        2. Implement the basic skeleton of the CNN in PyTorch. Write the code to take a ViZDoom screen buffer (frame) as input and produce a forward pass with action logits as output.
+        2. Implement the basic skeleton of the CNN in PyTorch. Write the code to take a ViZDoom screen buffer (frame) as input and produce a forward pass with action logits as output. ***COMPLETED***
 
     * **Deliverables:** 
         - A fully functional development environment.
