@@ -3,20 +3,20 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecTransposeImage
 from stable_baselines3.common.monitor import Monitor
 
-import wandb
-from wandb.integration.sb3 import WandbCallback
+# import wandb
+# from wandb.integration.sb3 import WandbCallback
 
 from vizdoom_sb3_env import VizDoomBasicEnv
 
 
-wandb.init(
-    project = "vizdoom-ppo",
-    config = {
-        "total_timesteps": 500_000,
-        "learning_rate": 0.0001,
-        "env_name": "VizdoomCacodemonRecognition-v0"
-    }
-)
+# wandb.init(
+#     project = "vizdoom-ppo",
+#     config = {
+#         "total_timesteps": 500_000,
+#         "learning_rate": 0.0001,
+#         "env_name": "VizdoomCacodemonRecognition-v0"
+#     }
+# )
 
 
 def make_env():
@@ -47,11 +47,12 @@ def main():
     print("Using device:", model.device)
 
     model.learn(total_timesteps=500_000,
-                callback=WandbCallback(
-                    gradient_save_freq=1000,
-                    model_save_path="models/",
-                    verbose = 2
-                ))
+                # callback=WandbCallback(
+                #     gradient_save_freq=1000,
+                #     model_save_path="models/",
+                #     verbose = 2
+                # )
+                )
     model.save("ppo_vizdoom_basic")
 
     env.close()
