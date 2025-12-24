@@ -30,16 +30,6 @@ maps
 				notfortesting = 0;
 				requiredarchives = "";
 			}
-			
-			resource2
-			{
-				type = 2;
-				location = "C:\\Users\\rhysi\\Downloads\\gzdoom-4-14-2-windows\\Pain_Elemental_Mod.pk3";
-				option1 = 0;
-				option2 = 0;
-				notfortesting = 0;
-				requiredarchives = "";
-			}
 		}
 		defaultfloortexture = "FLOOR4_8";
 		defaultceiltexture = "CEIL1_1";
@@ -58,9 +48,9 @@ maps
 		overrideceilheight = false;
 		overridebrightness = false;
 		uselongtexturenames = false;
-		viewpositionx = 19.92499f;
-		viewpositiony = -42.48637f;
-		viewscale = 0.5386583f;
+		viewpositionx = -4.368572f;
+		viewpositiony = -5.092561f;
+		viewscale = 0.9103323f;
 		scriptcompiler = "zdoom_acs.cfg";
 		
 		grid
@@ -124,7 +114,8 @@ maps
 				resource;
 				tabtype = 0;
 				scripttype = 1;
-				caretposition = 24;
+				caretposition = 1774;
+				firstvisibleline = 23;
 				activetab = true;
 			}
 		}
