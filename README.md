@@ -11,7 +11,7 @@ Before diving into the content or the report, it is important to understand what
 
 ### What is ViZDoom?
 
->A "Doom-based AI reseach platform for reinforcement learning from raw visual information". This project has been developed based off of [ZDOOM](https://zdoom.org/) an "enhanced port of the Doom engine for running on modern operating systems". 
+>A "Doom-based AI research platform for reinforcement learning from raw visual information". This project has been developed based off of [ZDOOM](https://zdoom.org/) an "enhanced port of the Doom engine for running on modern operating systems". 
 
 *For more information, click here: [ViZDoom](https://ViZDoom.cs.put.edu.pl/)*
 
@@ -25,7 +25,7 @@ The purpose of this project is to answer the following research question: "What 
 
 The aims can then be derived as follows:
 
-- Create specific test scenarios within the DOOM environment to test and train AI models on specific abilities. Examples include recognition, and hierarchy understanding. These should be appropriate `.wad` and `.cfg` files as per DOOM convention for map creation. See here for [futher examples.](https://github.com/BattmannWann/The-VizDoom-Experience/wiki/Initial-Project-Notes#project-description-broken-down)
+- Create specific test scenarios within the DOOM environment to test and train AI models on specific abilities. Examples include recognition, and hierarchy understanding. These should be appropriate `.wad` and `.cfg` files as per DOOM convention for map creation. See here for [further examples.](https://github.com/BattmannWann/The-VizDoom-Experience/wiki/Initial-Project-Notes#project-description-broken-down)
 
 - Create a baseline model for each scenario. This model should be implemented in PyTorch, using appropriate and conventional CNN architecture, optimisers, and loss functions. These models should take in frames from ViZDoom to learn and extrapolate features through unsupervised reinforcement learning. Rewards should be clearly stated in each scenario example
 
@@ -84,7 +84,9 @@ I am more than happy to discuss the project at any stage and provide demonstrati
 
 ## Hardware Specifications
 
-ViZDoom is a particularly verstile software that can run on a variety of hardware. The following lists the hardware used by my machine but, this does not mean that these are the only hardware that can run the project:
+ViZDoom is a particularly versatile software that can run on a variety of hardware. The following lists the hardware used by my machine but, this does not mean that these are the only hardware that can run the project:
 
-- ...
-- 
+- **CPU**: AMD Ryzen 5 5600X (12 Core)
+- **GPU**: NVIDIA GeForce RTX 3060
+- **Installed RAM**: 16.0 GB
+- **OS**: Windows 11 Home

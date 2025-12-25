@@ -1,6 +1,6 @@
 # WAD Files Folder
 
-[WAD files](link_here) are the type of file used by DOOM for mapping. These contain all information about the map and its contents, along with [ACS Scripting Files](link_here) for extra map manipulation. 
+[WAD files](https://vizdoom.farama.org/environments/creating_custom/) are the type of file used by DOOM for mapping. These contain all information about the map and its contents, along with [ACS Scripting Files](https://zdoom.org/wiki/ACS) for extra map manipulation. To access any ACS scripts, the WAD file MUST be opened in an editor, otherwise, there is no other way to view the ACS scripts.
 
 
 >***Important Side Note***: To recap, for all scenarios, there are levels of 'difficulty' in which the agents are trained on. Below details how the maps are structured to accommodate for this.
@@ -17,7 +17,29 @@ This folder contains the following WAD files (all begin with Cacodemon_Recogniti
 
 <br>
 
-- **.dbs files**: These store data by default on the WAD files. Understanding of manipulating these is *NOT* required; except for the interpreter that runs them. If not available, then they are usually automatically created. 
+- **.dbs**: These store data by default on the WAD files. Understanding of manipulating these is *NOT* required; except for the interpreter that runs them. If not available, then they are usually automatically created. 
+
+- **.backup...**: These are automatically created files as a result of using UltimateDoomBuilder. These can be deleted and ignored if not already.
+
+
+---
+
+### ACS_Scripts folder
+
+- **.acs**: Normally, these can only be viewed and accessed on opening a WAD file in a map maker/viewer programme, however, these have been included here such that specific functionalities can be determined nonetheless. 
+
+    These dictate specific thing behaviours and map functionalities for:
+
+    - Spawning enemies randomly
+    - Setting enemy characteristics (1 health points, dormant, unable to move, "thing special" which points to a function to provide +ve/-ve rewards accordingly)
+    - Negative rewards for shooting the gun
+    - Negative rewards for killing the incorrect enemy type
+    - Positive rewards for killing the correct enemy type
+    - How the episode finishes; specified enemy in question needs to have been killed (for this scenario, all Cacodemons must be killed)
+
+    The scripts have been written in a way to promote modularity, such that they can be reused and little work needs to be done to change their function(s). 
+
+---
 
 <br><br>
 

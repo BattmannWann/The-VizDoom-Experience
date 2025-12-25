@@ -2,7 +2,7 @@ import os
 import vizdoom as vzd
 import random
 from time import sleep
-from pprint import pprint
+from pprint import pprint, pformat
 
 import torch
 from torch import nn, optim, distributions
@@ -19,6 +19,8 @@ REWARD_TARGET_KILL = 20
 PENALTY_WRONG_KILL = -10
 LIVING_REWARD = -0.01
 
+SLEEP_TIME = 0
+
 learning_rate = 0.0001
 accumulate_episodes = 16
 
@@ -26,10 +28,10 @@ accumulate_episodes = 16
 
 if __name__ == "__main__":
 
-    #Initliase ViZDoom instance and set game variables
+    #Initialise ViZDoom instance and set game variables
     game = vzd.DoomGame()
 
-    game.set_screen_resolution(vzd.ScreenResolution.RES)
+    game.set_screen_resolution(vzd.ScreenResolution.RES_800X450)
     game.set_objects_info_enabled(True)
 
     #game.load_config("/home/battmannwann/Projects/Individual Project/The-VizDoom-Experience/src/scenarios/CacodemonRecognition/config_files/Cacodemon_Recognition.cfg")
@@ -99,7 +101,7 @@ if __name__ == "__main__":
 
             enemies_list = current_enemies if len(enemies_list) == 0 and current_enemies != None else enemies_list
 
-            print(f"\n\n{"-" * 40}\nAvailable enemies are: \n {pprint(current_enemies)}")
+            print(f" \n\n {'-' * 40} \nAvailable enemies are: \n {pformat(current_enemies)} ")
 
             # Find which enemies have been killed (game replaces enemy name with "Dead" + "NameHere")
             killed = [ID for ID in current_enemies if "Dead" in current_enemies[ID]["Name"]]
@@ -129,13 +131,14 @@ if __name__ == "__main__":
             action = [False] * len(game.get_available_buttons())
             action[random.randint(0, len(action)-1)] = True
             
-            if sleep_time > 0:
-                    sleep(sleep_time)
+            if SLEEP_TIME > 0:
+                    sleep(SLEEP_TIME)
 
             reward += game.make_action(action)
 
             successful_episodes += 1 if success == 2 else 0
 
-        print(f"\n\n {"=" * 50}\n Episode total reward: {game.get_total_reward()}\n Enemies Available: {pprint(enemies_list)}\n Enemies Killed IDs: {overall_killed}\n{"=" * 50}\n Successful Episodes: {successful_episodes}/{episodes}\n")
+        print(f"\n\n {'=' * 50}\n Episode total reward: {game.get_total_reward()}\n Enemies Available: \n{pformat(enemies_list)}\n")
+        print(f"Enemies Killed IDs: {overall_killed}\n{'=' * 50}\n Successful Episodes: {successful_episodes}/{episodes}\n")
 
     game.close()
