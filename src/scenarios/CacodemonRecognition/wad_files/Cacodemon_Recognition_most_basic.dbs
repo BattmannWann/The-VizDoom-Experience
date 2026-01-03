@@ -173,7 +173,7 @@ maps
 			gridrotate = 0;
 			backscalex = 100;
 			gridoriginx = 0;
-			gridsize = 64;
+			gridsize = 128;
 			background = "";
 			backoffsety = 0;
 		}
@@ -229,8 +229,8 @@ maps
 				resource;
 				tabtype = 0;
 				scripttype = 1;
-				caretposition = 2338;
-				firstvisibleline = 79;
+				caretposition = 2538;
+				firstvisibleline = 69;
 				activetab = true;
 			}
 		}
