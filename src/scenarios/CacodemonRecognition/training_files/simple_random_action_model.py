@@ -17,15 +17,7 @@ This short example shows what enemies are available, where they are, if they hav
 
 """
 
-
-
-
-#STATIC VARIABLES
-
-TARGET = "DeadCacodemon"
-REWARD_TARGET_KILL = 250
-PENALTY_WRONG_KILL = -10
-LIVING_REWARD = -0.01
+#Variables
 
 SLEEP_TIME = 0
 
@@ -65,99 +57,32 @@ if __name__ == "__main__":
     print("Available actions:", len(game.get_available_buttons()))
 
 
-    def get_enemies(state, verbose = False):
-        """Return dict of enemies (id -> name, position)."""
-        enemies = {}
-
-        if state:
-
-            if state.objects is not None:
-                for obj in state.objects:
-
-                    if obj.name not in ["DoomPlayer", "BulletPuff", "GreenTorch"]:
-
-                        id = obj.id
-                        name = obj.name
-                        position = (obj.position_x, obj.position_y, obj.position_z)
-
-                        enemies[id] = {"Name": name, "position": position}
-
-                        if verbose == True:
-
-                            print("-" * 50)
-                            print(f"ID: {obj.id}")
-                            print(f"Name: {obj.name}")
-                            print(f"Position: ({obj.position_x}, {obj.position_y}, {obj.position_z})")
-                            print("-" * 50)
-
-        
-        else:
-            print("No enemies information available.")
-                
-        
-        return enemies
-    
-
     def get_game_variables():
 
         return game.get_game_variable(vzd.GameVariable.USER1), game.get_game_variable(vzd.GameVariable.USER2), game.get_game_variable(vzd.GameVariable.USER3)
 
-    episodes = 5
-    overall_killed = []
-    enemies_list = []
-    episode_rewards = {}
-    
 
-    #If the agent kills the n required cacodemons, counts as a 'successful episode'
-    successful_episodes = 0
+    episodes = 5
+    overall_total_reward = 0
 
     for ep in range(episodes):
         
         print(f"\n=== Episode {ep+1} ===")
         game.new_episode()
-        episode_rewards[f"Episode {ep+1}"] = 0.0
 
         success = 0
+        running_reward = 0
 
-        actual_reward, total_bullets, bullets_used = get_game_variables()
-        print()
+        while True: 
 
-        while not game.is_episode_finished():
+            if game.is_episode_finished() == True:
 
-            state = game.get_state()
-            current_enemies = get_enemies(state, False)
+                actual_reward, _, _ = get_game_variables()
+                running_reward += actual_reward
 
-            # print(f"\n\nReward = {actual_reward}")
-            # print(f"Total Bullets = {total_bullets}")
-            # print(f"Bullets Used = {bullets_used}\n\n")
-            
-            enemies_list = current_enemies if len(enemies_list) == 0 and current_enemies != None else enemies_list
+                overall_total_reward += actual_reward
 
-            print(f" \n\n {'-' * 40} \nAvailable enemies are: \n {pformat(current_enemies)} ")
-
-            # Find which enemies have been killed (game replaces enemy name with "Dead" + "NameHere")
-            killed = [ID for ID in current_enemies if "Dead" in current_enemies[ID]["Name"]]
-
-            for eid in killed:
-
-                if eid not in overall_killed:
-                    overall_killed.append(eid)
-
-            reward = LIVING_REWARD
-
-            for eid in killed:
-                killed_name = current_enemies[eid]["Name"]
-
-                if killed_name == TARGET:
-                    reward += REWARD_TARGET_KILL
-                    print(f"Killed target: {killed_name[4:]}_{eid} (+{REWARD_TARGET_KILL})")
-
-                    success += 1
-                    
-
-                else:
-                    reward += PENALTY_WRONG_KILL
-                    print(f"Killed wrong type: {killed_name[4:]}_{eid} ({PENALTY_WRONG_KILL})")
+                break
 
             # Example random action (replace with your RL agent)
             action = [False] * len(game.get_available_buttons())
@@ -166,16 +91,15 @@ if __name__ == "__main__":
             if SLEEP_TIME > 0:
                     sleep(SLEEP_TIME)
 
-            reward += game.make_action(action)
+            _ = game.make_action(action)
 
-            actual_reward, total_bullets, bullets_used = get_game_variables()
-            print(f"Actual reward = : {actual_reward}")
-            
+            #actual_reward, total_bullets, bullets_used = get_game_variables()
+            #print(f"Actual reward = : {actual_reward}")
 
-            successful_episodes += 1 if success == 2 else 0
-
-        print(f"\n\n {'=' * 50}\n Episode total reward: {game.get_total_reward()}\n Enemies Available: \n{pformat(enemies_list)}\n")
-        print(f"Enemies Killed IDs: {overall_killed}\n{'=' * 50}\n Successful Episodes: {successful_episodes}/{episodes}\n")
-        print(f"\n\nActual rewards: {episode_rewards}\n")
+        print(f"\n\nEpisode total reward: {running_reward}\n")
+        
+        
 
     game.close()
+
+    print(f"{'=' * 50}\n\nOverall reward after {episodes} episodes was: {overall_total_reward}")

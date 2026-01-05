@@ -51,6 +51,8 @@ class CacodemonRecognitionEnv(gym.Env):
         #self.game.set_living_reward(-0.1)
         
         self.game.init()
+
+        self.total_reward = 0
         
         
         # Gym initiation
@@ -84,20 +86,13 @@ class CacodemonRecognitionEnv(gym.Env):
         action_vector[action] = True
         
         _ = self.game.make_action(action_vector)
+
+        reward = self.game.get_game_variable(vzd.GameVariable.USER1)
+        self.total_reward += reward
+
         done = self.game.is_episode_finished()
         
-        print(f"\n\n Action reward: {reward}, Total reward: {self.game.get_total_reward()}\n\n")
-        
-        state = self.game.get_state()
-        current_user_reward = 0
-        
-        current_user_reward = state.game_variables[0] if state else 0
-        reward = current_user_reward - self.last_user_reward
-        self.last_user_reward = current_user_reward
-        
-        print(f"\n\nUSER1 Total: {current_user_reward}, \nStep Reward: {reward}\n\n")
-
-        
+        print(f"\n\n Action reward: {reward}, Total reward: {self.total_reward}\n\n")      
         
         if not done:
             obs = self._get_obs()

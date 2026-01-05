@@ -17,7 +17,7 @@ if not os.path.exists(logs_directory):
     os.makedirs(logs_directory)
 
 # Hyperparameters
-learning_rate = 0.01 #Adam optimiser default
+learning_rate = 3e-4 #Adam optimiser default
 steps = 512
 batch_size = 64
 epochs = 4
