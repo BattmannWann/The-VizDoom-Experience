@@ -51,9 +51,6 @@ class CacodemonRecognitionEnv(gym.Env):
         #self.game.set_living_reward(-0.1)
         
         self.game.init()
-
-        self.total_reward = 0
-        
         
         # Gym initiation
         
@@ -88,11 +85,9 @@ class CacodemonRecognitionEnv(gym.Env):
         _ = self.game.make_action(action_vector)
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1)
-        self.total_reward += reward
-
         done = self.game.is_episode_finished()
         
-        print(f"\n\n Action reward: {reward}, Total reward: {self.total_reward}\n\n")      
+        print(f"\n\n Action reward: {reward}")      
         
         if not done:
             obs = self._get_obs()
@@ -110,8 +105,6 @@ class CacodemonRecognitionEnv(gym.Env):
     def reset(self, seed = None, options = None):
         
         super().reset(seed = seed)
-        
-        self.last_user_reward = 0
         
         self.game.new_episode()
         obs = self._get_obs()

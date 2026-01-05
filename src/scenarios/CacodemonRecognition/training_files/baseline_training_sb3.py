@@ -18,14 +18,14 @@ if not os.path.exists(logs_directory):
 
 # Hyperparameters
 learning_rate = 3e-4 #Adam optimiser default
-steps = 512
+steps = 2100
 batch_size = 64
 epochs = 4
 timesteps = 10000 #how often do we want the model to be saved? 
 gamma = 0.995
 gae_lambda = 0.95
 clip_range = 0.2
-ent_coef = 0.01
+ent_coef = 0.05
 vf_coef = 0.5
 
 training_repeats = 1000
