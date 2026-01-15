@@ -9,7 +9,7 @@ class CacodemonRecognitionEnv(gym.Env):
     
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 35}
     
-    def __init__(self, config_path, render = "human", reward_scale_factor = 100.0, seed = None):
+    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false"):
         
         """
         Constructor for the Cacodemon Recognition Scenario Environment.
@@ -22,6 +22,10 @@ class CacodemonRecognitionEnv(gym.Env):
         """
         
         super().__init__()
+        
+        self.render_mode = render
+        
+        self.verbose = verbose.lower()
         
         self._seed = seed
         self.reward_scale = reward_scale_factor
@@ -47,9 +51,11 @@ class CacodemonRecognitionEnv(gym.Env):
         #To maintain this separation, conditions will NOT be set here unless strictly necessary
         
         #Should be set by the config, using these print statements to test 
-        print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
         
-        print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
+        if self.verbose == "true":
+            print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
+            
+            print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
         
         # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
         #self.game.set_living_reward(-0.1)
@@ -83,39 +89,6 @@ class CacodemonRecognitionEnv(gym.Env):
         return self.game.get_state().screen_buffer
     
     
-    # def get_enemies(state, verbose = False):
-    #     """Return dict of enemies (id -> name, position)."""
-    #     enemies = {}
-
-    #     if state:
-
-    #         if state.objects is not None:
-    #             for obj in state.objects:
-
-    #                 if obj.name not in ["DoomPlayer", "BulletPuff", "GreenTorch"]:
-
-    #                     id = obj.id
-    #                     name = obj.name
-    #                     position = (obj.position_x, obj.position_y, obj.position_z)
-
-    #                     enemies[id] = {"Name": name, "position": position}
-
-    #                     if verbose == True:
-
-    #                         print("-" * 50)
-    #                         print(f"ID: {obj.id}")
-    #                         print(f"Name: {obj.name}")
-    #                         print(f"Position: ({obj.position_x}, {obj.position_y}, {obj.position_z})")
-    #                         print("-" * 50)
-
-        
-    #     else:
-    #         print("No enemies information available.")
-                
-        
-    #     return enemies
-    
-    
     def _get_cacodemon_alignment_reward(self):
         
         """
@@ -123,26 +96,26 @@ class CacodemonRecognitionEnv(gym.Env):
         
         Returns 1.0 for it being perfectly centred and 0.0 if it is far away or not visible
         """
-        
-        
+    
         state = self.game.get_state()
         
-        height, width, channels = self.observation_space.shape
+        width = self.game.get_screen_width()
+        height = self.game.get_screen_height()
         
         screen_cx = width / 2
         screen_cy = height / 2
         
-        if state is None or state.objects is None:
+        if state is None or state.labels is None:
             return 0.0
         
         rewards = []
         
-        for obj in state.objects:
+        for lab in state.labels:
             
-            if obj.name.lower() == "cacodemon":
+            if lab.object_name.lower() in ["cacodemon", "cyberdemon", "lost soul", "pain elemental", "zombieman"]:
                 
-                cx = obj.position_x + obj.width / 2
-                cy = obj.position_y + obj.height / 2
+                cx = lab.x + lab.width / 2
+                cy = lab.y + lab.height / 2
                 
                 dx = abs(cx - screen_cx) / screen_cx
                 dy = abs(cy - screen_cy) / screen_cy
@@ -153,35 +126,56 @@ class CacodemonRecognitionEnv(gym.Env):
                 rewards.append(alignment)
                 
         return max(rewards, default = 0.0)
-    
+        
     
     def step(self, action):
+        
+        info = {}
         
         # Convert a discrete action into a ViZDoom format for buttons
         action_vector = [False] * self.action_space.n
         action_vector[action] = True
         
-        _ = self.game.make_action(action_vector)
+        _ = self.game.make_action(action_vector, 4)
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
+        
+        alignment = self._get_cacodemon_alignment_reward()
+        reward += 0.05 * alignment
+        
         done = self.game.is_episode_finished()
         
-        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")      
+        if self.verbose == "true":
+            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")      
         
         if not done:
             obs = self._get_obs()
             
         else:
             obs = np.zeros(self.observation_space.shape, dtype = np.uint8)
+            info["reward"] = reward
+            
         
-        #Extra information can be added here. E.g. info for debugging...
-        info = {}
+        
         
         #returns the observation, the given reward, if the episode has finished, if truncation, and the information dictionary
         return obs, reward, done, False, info
     
     
+
+    def render(self):
+        
+        if self.render_mode == "human":
+            #Since the ViZDoom software already provides the ability to show the game window to monitor the agent
+            pass 
+        
+        elif self.render_mode == "rgb_array":
+            return self._get_obs()
+    
+    
     def reset(self, seed = None, options = None):
+        
+        seed = self._seed
         
         super().reset(seed = seed)
         

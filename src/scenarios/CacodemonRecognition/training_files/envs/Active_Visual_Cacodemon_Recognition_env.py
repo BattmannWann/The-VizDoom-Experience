@@ -24,6 +24,8 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         super().__init__()
         
+        self.render_mode = render
+        
         self._seed = seed
         self.reward_scale = reward_scale_factor
         
@@ -174,6 +176,16 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         #returns the observation, the given reward, if the episode has finished, if truncation, and the information dictionary
         return obs, reward, done, False, info
     
+    
+    def render(self):
+        
+        if self.render_mode == "human":
+            #Since the ViZDoom software already provides the ability to show the game window to monitor the agent
+            pass 
+        
+        elif self.render_mode == "rgb_array":
+            return self._get_obs()
+        
     
     def reset(self, seed = None, options = None):
         
