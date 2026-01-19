@@ -43,64 +43,105 @@ int target_id_2 = 21;
 //number of target enemies (Cacodemons) to kill
 int total_targets_to_kill = 2;
 
-global int 0: reward;
-global int 1: total_bullets_available;
-global int 2: bullets_used;
+global int 1: reward;
+global int 2: total_bullets_available;
+global int 3: bullets_used;
+
+int tic_count = 0;
 
 
-script 1 OPEN
-{
+script 1 OPEN{
+
+	reward = 0;
+	bullets_used = 0;
+
     SpawnTarget(target_id_1, "Cacodemon", 97, 112);
 	SpawnTarget(target_id_2, "Cacodemon", 97, 112);
 
 
-    reward = 0;
-	bullets_used = 0;
-
 }
 
 
-script 2 ENTER
-{
+script "LivingReward" ENTER{
+
+	tic_count = 0;
+
+   while (TRUE){
+
+		tic_count++;
+
+		if (tic_count % (35) == 0){
+			reward -= 100;   // living penalty
+
+		}
+
+		Delay(1);      // wait 1 tic
+
+    }
+}
+
+
+
+script 2 ENTER{
+
     TakeInventory("Fist",1);
-    ACS_Execute(3, 1, 0, 0, 0);
+    ACS_ExecuteAlways(3, 0, 0, 0, 0);
 
 	total_bullets_available = CheckInventory("Clip");
 	//print(s: "Total bullets: ", d: total_bullets_available);
 
 }
 
-script 3 (void)
-{
+script 3 (void){
+
     int bullets = CheckInventory("Clip");
 
-    while(true)
-    {
-        int t_bullets = CheckInventory("Clip");
+	//This way the game handles this aspect using proper game closure methods
+    while(true){
 
-        if(t_bullets < bullets)
-        {
-            reward = reward - 5;
-			bullets_used += bullets - t_bullets;
-        }
+        int t_bullets = CheckInventory("Clip");
+		delay(2);
+		int bullets_delta = bullets - t_bullets;
+
+
+
+		//Makes sure that the difference is calculated exactly, rather than
+		// just per tic as that could cause an outdated value to be retained
+
+		//reward -= 1 * bullets_delta;
+		bullets_used += bullets_delta;
+
+		//print(s: "Bullet shot, bullets used = \n", d: bullets_used, s: "Reward: ", d: reward);
+
 
         bullets = t_bullets;
         delay(1);
     }
 }
 
-script 4 (void)
-{
-    reward = reward + 106;
-	//print(s: "Killed");
-	total_targets_to_kill -= 1;
+script 4 DEATH {
 
-	if (total_targets_to_kill == 0) {
-		//print(s: "Total reward: ", d: reward, s: "\n Bullets at Start = ", d: total_bullets_available, s: " Bullets Used: ", d: bullets_used + 1);
-		//delay(20);
-		Exit_Normal(0);
+	if (GetActorProperty(0, APROP_Health) == 100){
+
+		//print(s: "Target has been killed");
+
+
+
+		//print(d: GetActorProperty(0, APROP_Health));
+
+		reward += 15000;
+
+		total_targets_to_kill -= 1;
+
+		if (total_targets_to_kill == 0) {
+
+			//reward -= 1;
+
+			//print(s: "Total reward: ", d: reward, s: "\n Bullets at Start = ", d: total_bullets_available, s: " Bullets Used: ", d: bullets_used + 1);
+			//delay(200);
+			Exit_Normal(0);
+		}
 	}
-
 
 }
 
@@ -137,9 +178,7 @@ function void SpawnTarget(int target_tid, str thing_name, int spot_min, int spot
 		// if not cacodemon, deduct negative reward
 
 
-	SetThingSpecial(target_tid, ACS_ExecuteAlways, 4);
-
-
+	SetThingSpecial(target_tid, ACS_Execute, 4);
 
 	SetActorProperty(target_tid, APROP_Dormant, 1);
 
