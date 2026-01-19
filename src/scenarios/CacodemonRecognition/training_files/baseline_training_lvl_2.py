@@ -12,7 +12,7 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_22"
+models_directory = "../models_baseline/CacodemonRecognition_23"
 logs_directory = "../logs"
 
 if not os.path.exists(models_directory):
@@ -37,7 +37,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_22.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_23.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -213,7 +213,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_22")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_23")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 
