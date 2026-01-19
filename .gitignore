@@ -1,0 +1,16 @@
+*venv/
+/venv/
+/venv
+
+*.backup*
+
+
+models_active/
+models_baseline/
+logs
+logs/
+logs*
+*logs*
+_vizdoom.ini
+_vizdoom
+*_pycache*
