@@ -4,7 +4,7 @@
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTransposeImage
-from envs.Cacodemon_recognition_env import CacodemonRecognitionEnv
+from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
 from time import sleep
 from pprint import pformat
@@ -27,7 +27,7 @@ def run(args):
         env = CacodemonRecognitionActiveEnv( 
         config_path = args.config_path,
         render = "human",
-        seed = 123,
+        #seed = 123,
         verbose = args.verbose
         ) 
         
@@ -36,7 +36,7 @@ def run(args):
         env = CacodemonRecognitionEnv(
             config_path = args.config_path,
             render = "human",
-            seed = 123,
+            #seed = 123,
             verbose = args.verbose 
         )
         

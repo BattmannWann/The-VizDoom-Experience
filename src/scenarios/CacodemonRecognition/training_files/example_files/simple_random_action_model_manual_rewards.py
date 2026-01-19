@@ -31,9 +31,9 @@ VISUAL_ALIGNMENT_SCALE = 0.02
 
 SLEEP_TIME =  0.01 #0.028
 
-scenario_configs = ["../config_files/Cacodemon_Recognition_most_basic.cfg", 
-                    "../config_files/Cacodemon_Recognition_basic.cfg", 
-                    "../config_files/Cacodemon_Recognition_Final.cfg"]
+scenario_configs = ["../../config_files/Cacodemon_Recognition_most_basic.cfg", 
+                    "../../config_files/Cacodemon_Recognition_basic.cfg", 
+                    "../../config_files/Cacodemon_Recognition_Final.cfg"]
 
 
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     game.set_objects_info_enabled(True)
 
     #game.load_config("/home/battmannwann/Projects/Individual Project/The-VizDoom-Experience/src/scenarios/CacodemonRecognition/config_files/Cacodemon_Recognition.cfg")
-    game.load_config(scenario_configs[0])
+    game.load_config(scenario_configs[1])
     
     game.init()
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
             reward = LIVING_REWARD
             enemies_list = current_enemies if len(enemies_list) == 0 and current_enemies != None else enemies_list
 
-            #print(f" \n\n {'-' * 40} \nAvailable enemies are: \n {pformat(current_enemies)} ")
+            print(f" \n\n {'-' * 40} \nAvailable enemies are: \n {pformat(current_enemies)} ")
 
             # Find which enemies have been killed (game replaces enemy name with "Dead" + "NameHere")
             killed = [ID for ID in current_enemies if "Dead" in current_enemies[ID]["Name"]]

@@ -112,7 +112,7 @@ class CacodemonRecognitionEnv(gym.Env):
         
         for lab in state.labels:
             
-            if lab.object_name.lower() in ["cacodemon", "cyberdemon", "lost soul", "pain elemental", "zombieman"]:
+            if lab.object_name.lower() in ["cacodemon", "cyberdemon", "lostsoul", "painelemental", "zombieman"]:
                 
                 cx = lab.x + lab.width / 2
                 cy = lab.y + lab.height / 2
@@ -146,7 +146,9 @@ class CacodemonRecognitionEnv(gym.Env):
         done = self.game.is_episode_finished()
         
         if self.verbose == "true":
-            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")      
+            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")    
+            
+        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")  
         
         if not done:
             obs = self._get_obs()
@@ -154,9 +156,6 @@ class CacodemonRecognitionEnv(gym.Env):
         else:
             obs = np.zeros(self.observation_space.shape, dtype = np.uint8)
             info["reward"] = reward
-            
-        
-        
         
         #returns the observation, the given reward, if the episode has finished, if truncation, and the information dictionary
         return obs, reward, done, False, info
