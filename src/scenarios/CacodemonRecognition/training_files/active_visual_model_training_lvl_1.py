@@ -3,21 +3,83 @@ import gymnasium as gym
 import os
 import sys
 import numpy as np
+from typing import Callable
+
+from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
+from stable_baselines3.common.vec_env import VecFrameStack, VecTransposeImage, DummyVecEnv
+from stable_baselines3.common.monitor import Monitor
 
 sys.path.append("../envs")
 
-from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
-from stable_baselines3.common.vec_env import VecFrameStack
-from stable_baselines3.common.env_util import make_vec_env
-
-models_directory = "../models/Active_Vision"
+models_directory = "../models_active/Cacodemon_Recognition_2"
 logs_directory = "../logs/Active_Vision"
 
 if not os.path.exists(models_directory):
     os.makedirs(models_directory)
     
+else:
+    
+    contin = False
+    
+    while contin != True:
+        
+        print(f"There is already a directory with the name: {models_directory}")
+        contin = True if input("Do you still want to continue? [Y/N]: ").lower() == "y" else exit(0)
+ 
+    
 if not os.path.exists(logs_directory):
     os.makedirs(logs_directory)
+    
+    
+
+#Functions
+
+def make_env():
+    
+    base = CacodemonRecognitionActiveEnv(config_path = 0, render = "rgb_array")
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2.csv")) 
+    
+    env = DummyVecEnv([lambda: base])
+    env = VecTransposeImage(env)
+    env = VecFrameStack(env, n_stack = 4)
+    
+    return env
+
+
+def linear_lr_schedule(initial_value: float = 3e-4, final_value: float = 1e-6, warmup_ratio: float = 0.05) -> Callable[[float], float]:
+    
+    """
+    Function for producing a linear learning rate (lr) schedule from initial_value to final_value. 
+    
+    The method used uses a warmup and steady decay sequence to ensure the model isn't disadvantaged.
+    
+    Parameters:
+        initial_value -> The initial learning rate value
+        
+    Returns:
+        A schedule that computes the current learning rate given remaining progress
+    """
+    
+    assert 0.0 <= warmup_ratio < 1.0, "LR must be NON negative and less than 1.0"
+    
+    def schedule(progress_remaining: float) -> float:
+        
+        """
+        Progress starts at 1.0 and decays to 0.0
+        """
+        progress_done = 1.0 - progress_remaining
+        
+        if progress_done < warmup_ratio:
+            return initial_value * (progress_done / warmup_ratio)
+        
+        decay_done = (progress_done - warmup_ratio) / max(1e-8, (1.0 - warmup_ratio))
+        
+        return final_value + (initial_value - final_value) * (1.0 - decay_done)
+    
+    return schedule
+    
+    
+
 
 # Hyperparameters
 
@@ -76,8 +138,8 @@ Recommended Value Ranges for all Hyperparameters:
 learning_rate = 0.0005 #3e-4  #3e-4 #Adam optimiser default # 0.0001
 steps = 2048
 batch_size = 32 #256
-epochs = 5
-timesteps = int(5e6) #how often do we want the model to be saved? 
+epochs = 10
+timesteps = 25000 #how often do we want the model to be saved? 
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
@@ -86,19 +148,14 @@ vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
 
+training_repeats = 1000
 
-training_repeats = 2
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
+env = make_env()
 
-env = CacodemonRecognitionActiveEnv(
-    config_path = 0,
-    render = "human"
-)
-
-#env = make_vec_env(env, n_envs = 4)
-#env = VecFrameStack(env, n_stack = 4)
-
-env.reset(seed = 123)
+env.seed(123)
+env.reset()
 
 
 """
@@ -145,16 +202,16 @@ model = PPO(
     
     policy = "CnnPolicy",
     env = env,
-    learning_rate = learning_rate,
+    learning_rate = lr_schedule,
     n_steps = steps,
     batch_size = batch_size,
     gamma = gamma,
     gae_lambda = gae_lambda,
-    #clip_range = clip_range,
+    clip_range = clip_range,
     ent_coef = ent_coef,
-    #vf_coef = vf_coef,
-    #max_grad_norm = max_grad_norm,
-    #target_kl = target_kl,
+    vf_coef = vf_coef,
+    max_grad_norm = max_grad_norm,
+    target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
     seed = 123,
@@ -173,7 +230,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_test")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2")
     model.save(f"{models_directory}/model_{training_repeats * i}")
     
 

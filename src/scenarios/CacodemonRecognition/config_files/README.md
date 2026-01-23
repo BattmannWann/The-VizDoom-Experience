@@ -14,3 +14,18 @@ The files found in this directory are as follows (under the naming convention `C
 
 - ***...Final.cfg***: Points to `Cacodemon_Recognition_Final.wad`
 
+
+How to calculate it -> using this formula:
+$$\text{Tics} = \text{Seconds} \times 35$$
+
+
+```
+=======================================
+|Desired Time  | Config Value (Tics)  |
+=======================================
+|30 Seconds    |  1050                |
+|60 Seconds    |  2100 (Recommended)  |
+|2 Minutes     |  4200                |
+|5 Minutes     |  10500 (Too long)    |
+=======================================
+```

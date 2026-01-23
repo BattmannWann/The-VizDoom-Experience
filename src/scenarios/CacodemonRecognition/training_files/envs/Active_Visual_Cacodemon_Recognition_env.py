@@ -10,7 +10,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 35}
     
-    def __init__(self, config_path, render = "human", reward_scale_factor = 100.0, seed = None):
+    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false"):
         
         """
         Constructor for the Cacodemon Recognition Scenario Environment.
@@ -25,6 +25,8 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         super().__init__()
         
         self.render_mode = render
+        
+        self.verbose = verbose.lower()
         
         self._seed = seed
         self.reward_scale = reward_scale_factor
@@ -50,10 +52,12 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         #To maintain this separation, conditions will NOT be set here unless strictly necessary
         
         #Should be set by the config, using these print statements to test 
-        print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
         
-        print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
-        
+        if self.verbose == "true":
+            print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
+            
+            print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
+            
         # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
         #self.game.set_living_reward(-0.1)
         
@@ -125,9 +129,9 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         for lab in state.labels:
             
-            if lab.object_name.lower() in ["cacodemon", "cyberdemon", "lost soul", "pain elemental", "zombieman"]:
+            if lab.object_name.lower() == "cacodemon":
 
-                print("Looked at a thing")
+                print("Looked at a Cacodemon")
                 
                 cx = lab.x + lab.width / 2
                 cy = lab.y + lab.height / 2
@@ -145,33 +149,64 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     def step(self, action):
         
+        
+        # | Action Index | Action Name     | Action Vector                                   |
+        # |--------------|-----------------|-------------------------------------------------|
+        # | 0            | ATTACK          | [True, False, False, False, False, False, False] |
+        # | 1            | MOVE_LEFT       | [False, True, False, False, False, False, False] |
+        # | 2            | MOVE_RIGHT      | [False, False, True, False, False, False, False] |
+        # | 3            | MOVE_FORWARD    | [False, False, False, True, False, False, False] |
+        # | 4            | MOVE_BACKWARD   | [False, False, False, False, True, False, False] |
+        # | 5            | TURN_LEFT       | [False, False, False, False, False, True, False] |
+        # | 6            | TURN_RIGHT      | [False, False, False, False, False, False, True] |
+        
+        actions = {
+            
+            0: "ATTACK",
+            1: "MOVE_LEFT",
+            2: "MOVE_RIGHT",
+            3: "MOVE_FORWARD",
+            4: "MOvE_BACKWARD",
+            5: "TURN_LEFT",
+            6: "TURN_RIGHT"
+        }
+        
+        #Extra information can be added here. E.g. info for debugging...
+        info = {}
+
         # Convert a discrete action into a ViZDoom format for buttons
         action_vector = [False] * self.action_space.n
         action_vector[action] = True
         
-        _ = self.game.make_action(action_vector)
+        _ = self.game.make_action(action_vector, 4)
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
 
         alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
         reward += 0.02 * alignment
+        
+        if action in [5, 6]:
+            reward += 0.05
 
         done = self.game.is_episode_finished()
         
-        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")      
+        if self.verbose == "true":
+            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")      
+        
+        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")      
+        
         
         if not done:
             frame = self._get_obs()
             obs = self._get_crop_image(frame)
-
-            cv2.imshow("Cropped image", obs)
-            cv2.waitKey(1)
+            
+            if self.verbose == "true":
+                cv2.imshow("Cropped image", obs)
+                cv2.waitKey(1)
             
         else:
             obs = np.zeros(self.observation_space.shape, dtype = np.uint8)
-        
-        #Extra information can be added here. E.g. info for debugging...
-        info = {}
+            info["reward"] = reward
         
         #returns the observation, the given reward, if the episode has finished, if truncation, and the information dictionary
         return obs, reward, done, False, info
@@ -189,11 +224,11 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     def reset(self, seed = None, options = None):
         
+        seed = self._seed
+        
         super().reset(seed = seed)
         
         if seed is not None:
-            
-            self._seed = seed
             
             self.action_space.seed(seed)
             self.observation_space.seed(seed)

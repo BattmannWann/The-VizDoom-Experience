@@ -112,7 +112,7 @@ class CacodemonRecognitionEnv(gym.Env):
         
         for lab in state.labels:
             
-            if lab.object_name.lower() in ["cacodemon", "cyberdemon", "lostsoul", "painelemental", "zombieman"]:
+            if lab.object_name.lower() in ["cacodemon"]: #, "cyberdemon", "lostsoul", "painelemental", "zombieman"]:
                 
                 cx = lab.x + lab.width / 2
                 cy = lab.y + lab.height / 2
@@ -139,21 +139,18 @@ class CacodemonRecognitionEnv(gym.Env):
         _ = self.game.make_action(action_vector, 4)
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
-        print(f"Game Output: {self.game.get_game_variable(vzd.GameVariable.USER1)}, Scaled Reward: {reward}")
-        
-        sleep(0.035)
         
         alignment = self._get_cacodemon_alignment_reward()
         
-        #going to see if not including this after level 1 makes it learn better things
-        #reward += 0.05 * alignment
+       
+        reward += 0.005 * alignment
         
         done = self.game.is_episode_finished()
         
         if self.verbose == "true":
             print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")    
             
-        #print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")  
+        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")  
         
         if not done:
             obs = self._get_obs()
@@ -184,8 +181,6 @@ class CacodemonRecognitionEnv(gym.Env):
         super().reset(seed = seed)
         
         if seed is not None:
-            
-            self._seed = seed
             
             self.action_space.seed(seed)
             self.observation_space.seed(seed)

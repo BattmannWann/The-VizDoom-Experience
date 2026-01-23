@@ -12,7 +12,7 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_23"
+models_directory = "../models_baseline/CacodemonRecognition_30"
 logs_directory = "../logs"
 
 if not os.path.exists(models_directory):
@@ -37,7 +37,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_23.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_30.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -134,20 +134,21 @@ Recommended Value Ranges for all Hyperparameters:
 
 learning_rate = 3e-4  #3e-4 #Adam optimiser default # 0.0001
 steps = 2048
-batch_size = 256 #32
-epochs = 10
-timesteps = 100000 #how often do we want the model to be saved? 
+batch_size = 32 #512
+epochs = 15
+timesteps = 25000 #100000 #how often do we want the model to be saved? 
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
-ent_coef = 0.015
+ent_coef = 0.01
 vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
 
 training_repeats = 1000
 
-lr_schedule = linear_lr_schedule(initial_value = 1e-4, final_value = 5e-5, warmup_ratio = 0.02)
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5, warmup_ratio = 0.1)
+#lr_schedule = linear_lr_schedule(initial_value = 7.5e-5, final_value = 3e-5, warmup_ratio = 0.1)
 
 env = make_env()
 
@@ -195,10 +196,32 @@ Model Parameters:
 
 """
 
-model = PPO.load(path = "../models_baseline/CacodemonRecognition_5/model_5700000.zip", env = env)
+model = PPO.load(
+    
+    path = "../models_baseline/CacodemonRecognition_5/model_5700000.zip",
+    env = env,
+    seed = 123,
+    verbose = 1,
+    tensorboard_log = logs_directory,
+    
+    custom_objects = {
+        "learning_rate":lr_schedule,
+        "n_steps": steps,
+        "batch_size": batch_size,
+        "gamma": gamma,
+        "gae_lambda": gae_lambda,
+        "clip_range": clip_range,
+        "ent_coef": ent_coef,
+        "vf_coef": vf_coef,
+        "max_grad_norm": max_grad_norm,
+        "target_kl": target_kl
+    
+    }
+)
 
-model.learning_rate = learning_rate
-model.ent_coef = ent_coef
+
+
+
 
 # training loop, model saves every `timesteps` and is trained `training_repeats` times...
 # to make sure that the model is NOT reset after `timesteps`, we need to pass in `reset_num_timesteps = False`
@@ -208,12 +231,16 @@ model.ent_coef = ent_coef
 
 print("\n\nBeginning training for Cacodemon Recognition scenario...\n\n")
 
+print("n_steps:", model.n_steps, "batch_size:", model.batch_size)
+print("num_envs:", model.get_env().num_envs)
+
+
 for i in range(1, training_repeats):
     
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_23")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_30")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

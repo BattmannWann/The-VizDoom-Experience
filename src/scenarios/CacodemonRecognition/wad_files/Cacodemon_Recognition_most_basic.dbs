@@ -139,7 +139,6 @@ maps
 				option1 = 0;
 				option2 = 0;
 				notfortesting = 1;
-				requiredarchives = "gzdoom";
 			}
 			
 			resource1
@@ -229,8 +228,8 @@ maps
 				resource;
 				tabtype = 0;
 				scripttype = 1;
-				caretposition = 3101;
-				firstvisibleline = 120;
+				caretposition = 3009;
+				firstvisibleline = 123;
 				activetab = true;
 			}
 		}
