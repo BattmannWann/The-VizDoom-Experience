@@ -31,9 +31,9 @@ class CacodemonRecognitionEnv(gym.Env):
         self.reward_scale = reward_scale_factor
         
         scenario_configs = [
-            "../config_files/Cacodemon_Recognition_most_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_Final.cfg"
+            "config_files/Cacodemon_Recognition_most_basic.cfg", 
+            "config_files/Cacodemon_Recognition_basic.cfg", 
+            "config_files/Cacodemon_Recognition_Final.cfg"
         ]
         
         #passed parameters checks...
@@ -53,8 +53,8 @@ class CacodemonRecognitionEnv(gym.Env):
         #Should be set by the config, using these print statements to test 
         
         if self.verbose == "true":
-            print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
             
+            print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
             print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
         
         # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
@@ -148,7 +148,6 @@ class CacodemonRecognitionEnv(gym.Env):
         if self.verbose == "true":
             print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")    
             
-        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}")  
         
         if not done:
             obs = self._get_obs()

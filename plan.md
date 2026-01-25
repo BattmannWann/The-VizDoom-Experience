@@ -9,7 +9,7 @@
 
 The following is a week-by-week plan for the whole project, that will be updated during project completion. This will include appropriate information on where to find/see any progress and whether or not the actions have been completed or postponed to a following week.
 
-`NOTE: Any notes that have been taken will be featured under the repository` [wiki]()
+`NOTE: Any notes that have been taken will be featured under the repository` [wiki](https://github.com/BattmannWann/The-VizDoom-Experience/wiki)
 
 See the following:
 
