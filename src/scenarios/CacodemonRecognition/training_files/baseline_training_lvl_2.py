@@ -12,7 +12,7 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_30"
+models_directory = "../models_baseline/CacodemonRecognition_2_6"
 logs_directory = "../logs"
 
 if not os.path.exists(models_directory):
@@ -37,7 +37,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_30.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_6.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -131,14 +131,15 @@ Recommended Value Ranges for all Hyperparameters:
  
 """
 
+#Final parameters of model 2_4.
 
 learning_rate = 3e-4  #3e-4 #Adam optimiser default # 0.0001
 steps = 2048
-batch_size = 32 #512
+batch_size = 32 # or move to 128
 epochs = 15
-timesteps = 25000 #100000 #how often do we want the model to be saved? 
+timesteps = 10000 #how often do we want the model to be saved? 
 gamma = 0.99
-gae_lambda = 0.95 ##
+gae_lambda = 0.92 ##
 clip_range = 0.2
 ent_coef = 0.01
 vf_coef = 0.5
@@ -147,12 +148,11 @@ target_kl = 0.03
 
 training_repeats = 1000
 
-lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5, warmup_ratio = 0.1)
-#lr_schedule = linear_lr_schedule(initial_value = 7.5e-5, final_value = 3e-5, warmup_ratio = 0.1)
+lr_schedule = linear_lr_schedule(initial_value = 3e-5, final_value = 1e-5, warmup_ratio = 0.05)
 
 env = make_env()
-
 env.seed(123)
+
 env.reset()
 
 
@@ -198,7 +198,7 @@ Model Parameters:
 
 model = PPO.load(
     
-    path = "../models_baseline/CacodemonRecognition_5/model_5700000.zip",
+    path = "../models_baseline/CacodemonRecognition_1_3/model_2450000.zip",
     env = env,
     seed = 123,
     verbose = 1,
@@ -240,7 +240,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_30")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_6")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

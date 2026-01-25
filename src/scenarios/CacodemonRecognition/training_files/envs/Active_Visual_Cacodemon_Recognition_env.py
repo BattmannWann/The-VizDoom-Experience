@@ -71,10 +71,12 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         #Observation space
         
-        self.screen_width = self.game.get_screen_width()
-        self.screen_height = self.game.get_screen_height()
+        self.screen_width = self.game.get_screen_width() #160
+        self.screen_height = self.game.get_screen_height() #120
+        
+        print(f"Screen dimensions, Height: {self.screen_height}, Width: {self.screen_width}")
 
-        self.height_crop, self.width_crop = 84, 84
+        self.height_crop, self.width_crop = 100, 80
         
         self.observation_space = spaces.Box(
             
@@ -166,7 +168,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             1: "MOVE_LEFT",
             2: "MOVE_RIGHT",
             3: "MOVE_FORWARD",
-            4: "MOvE_BACKWARD",
+            4: "MOVE_BACKWARD",
             5: "TURN_LEFT",
             6: "TURN_RIGHT"
         }
@@ -182,8 +184,8 @@ class CacodemonRecognitionActiveEnv(gym.Env):
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
 
-        alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
-        reward += 0.02 * alignment
+        #alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
+        #reward += 0.02 * alignment
         
         if action in [5, 6]:
             reward += 0.05

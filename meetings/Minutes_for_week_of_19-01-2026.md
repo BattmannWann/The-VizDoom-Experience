@@ -82,6 +82,8 @@ Previous meeting minutes were not taken due to redundancy. Project had a slow st
 
 - Once baseline model has been trained, train the active vision model in a way that tests how small the bounded-box frame input can be before model training collapses. This provides further insights on how beneficial/detrimental active vision may be in training an agent in this task and provide further insights into how small the input needs to be to outperform the baseline if possible. 
 
+- A point for future development alongside have the agent kill two or more of a type of enemy would be to understand the effect of a remaining carcass once the enemy is killed and see if removing it takes away its focus and diverts it to another enemy.
+
 ---
 
 ### Questions:

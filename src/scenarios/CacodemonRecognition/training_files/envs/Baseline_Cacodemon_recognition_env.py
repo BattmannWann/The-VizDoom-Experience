@@ -141,9 +141,7 @@ class CacodemonRecognitionEnv(gym.Env):
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
         
         alignment = self._get_cacodemon_alignment_reward()
-        
-       
-        reward += 0.005 * alignment
+        reward += 0.01 * alignment
         
         done = self.game.is_episode_finished()
         

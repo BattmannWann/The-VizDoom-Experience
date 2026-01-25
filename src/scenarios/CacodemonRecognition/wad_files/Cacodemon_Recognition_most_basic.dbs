@@ -139,6 +139,7 @@ maps
 				option1 = 0;
 				option2 = 0;
 				notfortesting = 1;
+				requiredarchives = "";
 			}
 			
 			resource1
@@ -228,8 +229,7 @@ maps
 				resource;
 				tabtype = 0;
 				scripttype = 1;
-				caretposition = 3009;
-				firstvisibleline = 123;
+				caretposition = 3360;
 				activetab = true;
 			}
 		}

@@ -8,9 +8,24 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
 from time import sleep
 from pprint import pformat
-
+import os
 import argparse
 
+def write_to_file(file_path, write_mode, content):
+    
+    try:
+    
+        with open(file_path, write_mode) as f:
+            
+            f.write(content)
+            
+        print("Successfully written to file!")
+            
+    except Exception as e:
+        
+        print(f"ERROR WRITING TO FILE: {file_path},\nsee: {e}")
+        
+    
 def make_env(base):
     
     env = DummyVecEnv([lambda: base])
@@ -41,7 +56,6 @@ def run(args):
         )
         
     env = make_env(env)
-        
     model = PPO.load(args.in_model_path)
     
     overall_rewards = []
@@ -69,7 +83,59 @@ def run(args):
             
     env.close()
     
-    print(f"\n\n{'=' * 40}\nOverall Rewards: {pformat(overall_rewards)}\n{'=' * 40}\n\n")
+    output_msg = f"\n\n{'=' * 40}\nOverall Rewards: \n{pformat(overall_rewards)}\n{'=' * 40}\n\n"
+    print(output_msg)
+    
+    
+    if args.output.lower() != "false":
+        
+        created = False
+        write_mode = None
+        
+        file_name = args.output
+        file_path = f"output_files/{file_name}.txt"
+    
+        if not os.path.exists(file_path):
+            
+            while created == False:
+            
+                try:
+                
+                    open(f"output_files/{file_name}.txt", "x")
+                    created = True
+                    write_mode = "w"
+                    
+                    final_file_path = f"output_files/{file_name}.txt"
+                    
+                except Exception as e:
+                    
+                    print(f"ERROR, Creating File: {file_path} was unsuccessful. See:\n{e}")
+                    ans = input("Do you want to try again? [Y/N]: ")
+                    
+                    if ans.lower() == "n":
+                        
+                        exit(0)
+                        
+                    else:
+                        
+                        file_name = input("Please enter a name for the file: ").lower()
+                        
+            write_to_file(final_file_path, write_mode, output_msg.strip("\n"))
+            
+            
+        else:
+            
+            while True:
+                
+                ans = input(f"File: {f'output_files/{args.output}.txt'} already exists. Would you like to continue? [Y/N]: ")
+                
+                if ans.lower() == "y": 
+                    
+                    write_to_file(file_path = file_path, write_mode = "a", content = output_msg.strip("\n"))
+                    break
+                            
+                else:
+                    exit(0)
     
     
 
@@ -102,6 +168,8 @@ if __name__ == "__main__":
                         default = 0)
     
     parser.add_argument("--verbose", type = str, required = False, default = "false", help = "Set optional print messages during model evaluation.")
+    
+    parser.add_argument("--output", type = str, required = False, default = "false", help = "Provide a file to write the output of model performance to. Default: false")
     
     args = parser.parse_args()
     run(args)
