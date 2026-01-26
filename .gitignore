@@ -9,7 +9,7 @@
 # === PROJECT SPECIFIC ===
 
 *.backup*
-
+*.dbs
 
 models_active/
 models_baseline/
@@ -18,8 +18,10 @@ logs/
 logs*
 *logs*
 _vizdoom.ini
-_vizdoom
+vizdoom.ini
+*.dbs
 
+output_files/
 
 # === PYTHON ===
 
