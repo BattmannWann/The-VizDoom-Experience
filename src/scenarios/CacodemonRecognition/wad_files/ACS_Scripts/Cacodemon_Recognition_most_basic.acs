@@ -24,6 +24,8 @@
 	//
 	// - Uses a specialised function to randomly spawn enemies in the map, retrying on failure.
 	//   This utilises thing type MapSpot, where a random MapSpot is chosen for enemy placement
+	//
+	// - Based off of the (Baseline) Cacodemon_Recognition_1_3 training iteration (See logs/README.md)
 
 //=====================================================================
 
@@ -37,11 +39,11 @@
 
 
 int target_id_1 = 20;
-int target_id_2 = 21;
+//int target_id_2 = 21;
 
 
 //number of target enemies (Cacodemons) to kill
-int total_targets_to_kill = 2;
+int total_targets_to_kill = 1; //2;
 
 global int 1: reward;
 global int 2: total_bullets_available;
@@ -56,7 +58,7 @@ script 1 OPEN{
 	bullets_used = 0;
 
     SpawnTarget(target_id_1, "Cacodemon", 97, 112);
-	SpawnTarget(target_id_2, "Cacodemon", 97, 112);
+	//SpawnTarget(target_id_2, "Cacodemon", 97, 112);
 
 
 }
@@ -125,21 +127,24 @@ script 4 DEATH {
 
 		//print(s: "Target has been killed");
 
-
-
 		//print(d: GetActorProperty(0, APROP_Health));
 
-		reward += 15000;
+		//reward += 15000;
 
 		total_targets_to_kill -= 1;
 
 		if (total_targets_to_kill == 0) {
 
-			//reward -= 1;
+			reward += 10000;
 
 			//print(s: "Total reward: ", d: reward, s: "\n Bullets at Start = ", d: total_bullets_available, s: " Bullets Used: ", d: bullets_used + 1);
 			//delay(200);
 			Exit_Normal(0);
+
+		} else {
+
+			reward += 7500;
+
 		}
 	}
 
@@ -179,6 +184,8 @@ function void SpawnTarget(int target_tid, str thing_name, int spot_min, int spot
 
 
 	SetThingSpecial(target_tid, ACS_Execute, 4);
+
+
 
 	SetActorProperty(target_tid, APROP_Dormant, 1);
 

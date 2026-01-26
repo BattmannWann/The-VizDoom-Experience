@@ -25,6 +25,8 @@
 	//
 	// - Uses a specialised function to randomly spawn enemies in the map, retrying on failure.
 	//   This utilises thing type MapSpot, where a random MapSpot is chosen for enemy placement
+	//
+	// - Based off of training iteration (Baseline) Cacodemon_Recognition_1_3 (found in the logs/README.md)
 
 //=====================================================================
 
@@ -40,18 +42,18 @@
 	// 24 = Lost Soul_2
 
 int target_id_1 = 20;
-int target_id_2 = 21;
+//int target_id_2 = 21;
 int target_id_3 = 22;
 int target_id_4 = 23;
 int target_id_5 = 24;
 
 
 //number of target enemies (Cacodemons) to kill
-int total_targets_to_kill = 2;
+int total_targets_to_kill = 1;
 
-global int 0: reward;
-global int 1: total_bullets_available;
-global int 2: bullets_used;
+global int 1: reward;
+global int 2: total_bullets_available;
+global int 3: bullets_used;
 
 int tic_count = 0;
 
@@ -59,7 +61,7 @@ int tic_count = 0;
 script 1 OPEN
 {
     SpawnTarget(target_id_1, "Cacodemon", 97, 122);
-	SpawnTarget(target_id_2, "Cacodemon", 97, 122);
+	//SpawnTarget(target_id_2, "Cacodemon", 97, 122);
 
 	SpawnTarget(target_id_3, "PainElemental", 97, 122);
 
@@ -82,7 +84,7 @@ script "LivingReward" ENTER {
 		tic_count++;
 
 		if (tic_count % (35) == 0){
-			reward -= 100;
+			reward -= 10;
 		}
 
 		Delay(1);
@@ -108,7 +110,6 @@ script 3 ENTER{
     while(true){
 
         int t_bullets = CheckInventory("Clip");
-		delay(2);
 		int bullets_delta = bullets - t_bullets;
 
 
@@ -116,13 +117,14 @@ script 3 ENTER{
 		//Makes sure that the difference is calculated exactly, rather than
 		// just per tic as that could cause an outdated value to be retained
 
-		reward -= 1 * bullets_delta;
+		reward -= 100 * bullets_delta;
 		bullets_used += bullets_delta;
 
 		//print(s: "Bullet shot, bullets used = \n", d: bullets_used, s: "Reward: ", d: reward);
 
 
         bullets = t_bullets;
+		bullets_delta = 0;
         delay(1);
     }
 }
@@ -136,17 +138,18 @@ script 4 DEATH {
 
 		//print(d: GetActorProperty(0, APROP_Health));
 
-		reward += 15000;
-
 		total_targets_to_kill -= 1;
 
 		if (total_targets_to_kill == 0) {
 
-			//reward -= 1;
+			reward += 10000;
 
 			//print(s: "Total reward: ", d: reward, s: "\n Bullets at Start = ", d: total_bullets_available, s: " Bullets Used: ", d: bullets_used + 1);
 			//delay(200);
 			Exit_Normal(0);
+		} else {
+
+			reward += 5000;
 		}
 	}
 
@@ -160,7 +163,7 @@ script 5 DEATH{
 
 		//print(d: GetActorProperty(0, APROP_Health));
 
-		reward += -10000;
+		reward -= 20000;
 
 	}
 

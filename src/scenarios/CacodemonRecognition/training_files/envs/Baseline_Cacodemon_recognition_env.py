@@ -31,9 +31,9 @@ class CacodemonRecognitionEnv(gym.Env):
         self.reward_scale = reward_scale_factor
         
         scenario_configs = [
-            "config_files/Cacodemon_Recognition_most_basic.cfg", 
-            "config_files/Cacodemon_Recognition_basic.cfg", 
-            "config_files/Cacodemon_Recognition_Final.cfg"
+            "../config_files/Cacodemon_Recognition_most_basic.cfg", 
+            "../config_files/Cacodemon_Recognition_basic.cfg", 
+            "../config_files/Cacodemon_Recognition_Final.cfg"
         ]
         
         #passed parameters checks...

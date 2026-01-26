@@ -1,11 +1,14 @@
 """
-                                                                   
+Trained model evaluation file to ruin trained models. This accommodates both the baseline and active vision models.
+
+To understand what arguments must and can be passed using the command line, run the following command in the `training_files/` directory:
+    `$ python -m model_evaluation.run_model --help`                                                               
 """
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTransposeImage
-from training_files.envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
-from training_files.envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
+from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
+from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
 from time import sleep
 from pprint import pformat
 import os
@@ -59,6 +62,31 @@ def run(args):
     env = make_env(env)
     model = PPO.load(args.in_model_path)
     
+    
+    if args.verbose == "true":
+        
+        params = {
+            "learning_rate": model.learning_rate,
+            "number_of_steps": model.n_steps,
+            "batch_size": model.batch_size,
+            "gamma": model.gamma,
+            "gae_lambda": model.gae_lambda,
+            "clip_range": model.clip_range,
+            "entropy_coefficient": model.ent_coef,
+            "value_function_coefficient": model.vf_coef,
+            "max_gradient_norm": model.max_grad_norm,
+            "target_kl": model.target_kl,
+            "verbosity_level": model.verbose,
+            "tensorboard_log": model.tensorboard_log,
+            "seed": model.seed 
+            
+        }
+        
+        print(f'{"=" * 40} \n{pformat(params)}')
+        sleep(2)
+        print(f'{"=" * 40}\n\n')
+        
+    
     overall_rewards = []
     
     for ep in range(args.episodes):
@@ -94,7 +122,7 @@ def run(args):
         write_mode = None
         
         file_name = args.output
-        file_path = f"../../../data/model_performance_data/"
+        file_path = f"../../../../data/model_performance_data/"
     
         if not os.path.exists(f"{file_path}{file_name}"):
             

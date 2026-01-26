@@ -12,7 +12,7 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_2_6"
+models_directory = "../models_baseline/CacodemonRecognition_test"
 logs_directory = "../logs"
 
 if not os.path.exists(models_directory):
@@ -37,7 +37,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_6.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_test.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -198,7 +198,7 @@ Model Parameters:
 
 model = PPO.load(
     
-    path = "../models_baseline/CacodemonRecognition_1_3/model_2450000.zip",
+    path = "../models_baseline/Level 1/model_2450000.zip",
     env = env,
     seed = 123,
     verbose = 1,
@@ -240,7 +240,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_6")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_test")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 
