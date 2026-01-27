@@ -76,8 +76,6 @@ The-ViZDoom-Experience/
 │   │       │   ├── Cacodemon_Recognition_Final.cfg
 │   │       │   └── README.md
 │   │       │
-│   │       ├── model_evaluation/
-│   │       │   └── run_model.py
 │   │       │
 │   │       ├── training_files/
 │   │       │   ├── active_vision_model_training/
@@ -94,9 +92,12 @@ The-ViZDoom-Experience/
 │   │       │   │   ├── Active_Visual_Cacodemon_Recognition_env.py
 │   │       │   │   └── Baseline_Cacodemon_Recognition_env.py
 │   │       │   │
-│   │       │   └── example_files/
-│   │       │       ├── simple_random_action_model.py
-│   │       │       └── simple_random_action_model_manual_rewards.py
+│   │       │   ├── example_files/
+│   │       |   │   ├── simple_random_action_model.py
+│   │       |   │   └── simple_random_action_model_manual_rewards.py
+|   |       |   |
+│   │       |   ├── model_evaluation/
+│   │       │       └── run_model.py
 │   │       │
 │   │       ├── wad_files/
 │   │       │   ├── ACS_Scripts/
