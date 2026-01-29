@@ -47,6 +47,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         self.game = vzd.DoomGame()
         self.game.load_config(scenario_configs[config_path])
+        #self.game.set_window_visible(False)
         
         #This section could be used to define game settings, but this is handled by the config file(s)
         #To maintain this separation, conditions will NOT be set here unless strictly necessary
@@ -74,15 +75,33 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         self.screen_width = self.game.get_screen_width() #160
         self.screen_height = self.game.get_screen_height() #120
         
-        print(f"Screen dimensions, Height: {self.screen_height}, Width: {self.screen_width}")
+        if verbose == "true":
+            print(f"Screen dimensions, Height: {self.screen_height}, Width: {self.screen_width}")
+            
 
-        self.height_crop, self.width_crop = 100, 80
+        """
+        SCALE REDUCTIONS
+        
+        Original (100%): 160x120
+        80%            : 128x96
+        60%            : 96x72
+        40%            : 64x48
+        20%            : 32x24
+        10%            : 16x12
+        5%             : 8x6
+        1%             : 1x1
+        
+        """
+        
+
+        
+        self.width_crop, self.height_crop,  = 64, 48
         
         self.observation_space = spaces.Box(
             
             low = 0,
             high = 255,
-            shape = (self.height_crop, self.width_crop, 3),
+            shape = (self.screen_height, self.screen_width, 3),
             dtype = np.uint8
         )
         
@@ -100,7 +119,18 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         x1 = (width - self.width_crop) // 2
         x2 = x1 + self.width_crop
 
-        return frame[y1:y2, x1:x2]
+        #crop = frame[y1:y2, x1:x2]
+        crop = frame[y1:y1+self.height_crop, x1:x1+self.width_crop] #(16,16,3)
+        
+        pad_top = (self.screen_height - crop.shape[0]) // 2
+        pad_bottom = (self.screen_height - crop.shape[0] - pad_top)
+        pad_left = (self.screen_width - crop.shape[1]) // 2
+        pad_right = (self.screen_width - crop.shape[1] - pad_left)
+        
+        padded = cv2.copyMakeBorder(crop, pad_top, pad_bottom, pad_left, pad_right,
+                                    borderType = cv2.BORDER_CONSTANT, value = (0, 0, 0)) #black padding
+        
+        return padded
         
         
     def _get_obs(self):
@@ -184,13 +214,15 @@ class CacodemonRecognitionActiveEnv(gym.Env):
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
 
-        #alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
-        #reward += 0.02 * alignment
+        alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
+        reward += 0.05 * alignment
         
         if action in [5, 6]:
             reward += 0.05
 
         done = self.game.is_episode_finished()
+        
+        #sleep(0.035)
         
         if self.verbose == "true":
             print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")      
@@ -207,6 +239,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
                 cv2.waitKey(1)
             
         else:
+            
             obs = np.zeros(self.observation_space.shape, dtype = np.uint8)
             info["reward"] = reward
         
@@ -226,7 +259,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     def reset(self, seed = None, options = None):
         
-        seed = self._seed
+        self._seed = seed
         
         super().reset(seed = seed)
         
