@@ -47,7 +47,9 @@ def run(args):
         config_path = args.config_path,
         render = "human",
         #seed = 123,
-        verbose = args.verbose
+        verbose = args.verbose,
+        reduction = args.reduction,
+        padded = args.padded
         ) 
         
     else:
@@ -203,6 +205,16 @@ if __name__ == "__main__":
     parser.add_argument("--verbose", type = str, required = False, default = "false", help = "Set optional print messages during model evaluation.")
     
     parser.add_argument("--output", type = str, required = False, default = "false", help = "Provide a file to write the output of model performance to. Default: false")
+    
+    parser.add_argument("--reduction", 
+                        type = int, 
+                        required = False, 
+                        default = 0, 
+                        help = """This can ONLY be used if --active is set to 'true'. This sets the percentage reduction of the screen pixel input sent to the model
+                                   For example, for an 80'%' reduction of the screen size, set this to 80
+                         """)
+    
+    parser.add_argument("--padded", type = str, required = False, default = "false", help = "set the active vision mode; padding = black square padding around reduced image, --active MUST be 'true'")
     
     args = parser.parse_args()
     run(args)

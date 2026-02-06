@@ -10,7 +10,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 35}
     
-    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false"):
+    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false", reduction = 0, padded = "false"):
         
         """
         Constructor for the Cacodemon Recognition Scenario Environment.
@@ -27,6 +27,9 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         self.render_mode = render
         
         self.verbose = verbose.lower()
+        self.reduction = reduction
+        
+        self.padded = padded
         
         self._seed = seed
         self.reward_scale = reward_scale_factor
@@ -59,6 +62,8 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             
             print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
             
+            print(f"Resolution is: {self.game.get_screen_format}")
+            
         # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
         #self.game.set_living_reward(-0.1)
         
@@ -74,13 +79,10 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         self.screen_width = self.game.get_screen_width() #160
         self.screen_height = self.game.get_screen_height() #120
-        
-        if verbose == "true":
-            print(f"Screen dimensions, Height: {self.screen_height}, Width: {self.screen_width}")
             
 
         """
-        SCALE REDUCTIONS
+        SCALE REDUCTIONS BASED ON RES_160x120
         
         Original (100%): 160x120
         80%            : 128x96
@@ -94,8 +96,17 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         """
         
 
+        if self.reduction == 0:
+            self.width_crop, self.height_crop,  = self.screen_width, self.screen_height
+            
+        else:
+            self.width_crop, self.height_crop = int(self.screen_width * self.reduction/100), int(self.screen_height * self.reduction/100)
+            
         
-        self.width_crop, self.height_crop,  = 64, 48
+        if verbose == "true":
+            
+            print(f"Original Screen dimensions, Height: {self.screen_height}, Width: {self.screen_width}")
+            print(f"{self.reduction}% Reduction Screen dimensions, Height: {self.height_crop}, Width: {self.width_crop}")
         
         self.observation_space = spaces.Box(
             
@@ -112,25 +123,36 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     def _get_crop_image(self, frame):
 
         height, width, channels = frame.shape
+        
+        if self.width_crop == self.screen_width and self.height_crop == self.screen_height:
+            return frame
 
         y1 = (height - self.height_crop) // 2
         y2 = y1 + self.height_crop
 
         x1 = (width - self.width_crop) // 2
         x2 = x1 + self.width_crop
+        
+        
+        if self.padded.lower() == "true":
 
-        #crop = frame[y1:y2, x1:x2]
-        crop = frame[y1:y1+self.height_crop, x1:x1+self.width_crop] #(16,16,3)
+            crop = frame[y1:y1+self.height_crop, x1:x1+self.width_crop] #(16,16,3)
+            
+            pad_top = (self.screen_height - crop.shape[0]) // 2
+            pad_bottom = (self.screen_height - crop.shape[0] - pad_top)
+            pad_left = (self.screen_width - crop.shape[1]) // 2
+            pad_right = (self.screen_width - crop.shape[1] - pad_left)
+            
+            padded = cv2.copyMakeBorder(crop, pad_top, pad_bottom, pad_left, pad_right,
+                                        borderType = cv2.BORDER_CONSTANT, value = (0, 0, 0)) #black padding
+            
+            return padded
         
-        pad_top = (self.screen_height - crop.shape[0]) // 2
-        pad_bottom = (self.screen_height - crop.shape[0] - pad_top)
-        pad_left = (self.screen_width - crop.shape[1]) // 2
-        pad_right = (self.screen_width - crop.shape[1] - pad_left)
-        
-        padded = cv2.copyMakeBorder(crop, pad_top, pad_bottom, pad_left, pad_right,
-                                    borderType = cv2.BORDER_CONSTANT, value = (0, 0, 0)) #black padding
-        
-        return padded
+        else:
+            
+            crop = frame[y1:y2, x1:x2]
+            crop_resized = cv2.resize(crop, (width, height), interpolation = cv2.INTER_LINEAR)
+            return crop_resized
         
         
     def _get_obs(self):
@@ -236,6 +258,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             
             if self.verbose == "true":
                 cv2.imshow("Cropped image", obs)
+                cv2.imshow("Original", frame)
                 cv2.waitKey(1)
             
         else:
