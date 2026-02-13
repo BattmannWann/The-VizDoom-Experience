@@ -176,4 +176,3 @@ Try to finish off development and ensure any missing requirements are fulfilled.
     * **Tasks:** Perform a final proofread. Submit the dissertation. Prepare presentation slides for the presentation.
     
     * **Deliverable:** **Dissertation submitted and presentation ready.** 
-

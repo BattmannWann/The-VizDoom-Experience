@@ -11,7 +11,7 @@ from stable_baselines3.common.monitor import Monitor
 
 sys.path.append("../envs")
 
-models_directory = "../models_active/Cacodemon_Recognition_2_13_5"
+models_directory = "../models_active/Cacodemon_Recognition_2_27_1"
 logs_directory = "../logs/Active_Vision"
 
 if not os.path.exists(models_directory):
@@ -36,8 +36,8 @@ if not os.path.exists(logs_directory):
 
 def make_env():
     
-    base = CacodemonRecognitionActiveEnv(config_path = 1, render = "rgb_array", reduction = 5)
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_13_5.csv")) 
+    base = CacodemonRecognitionActiveEnv(config_path = 1, render = "rgb_array", reduction = 1)
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_27_1.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -134,11 +134,10 @@ Recommended Value Ranges for all Hyperparameters:
  
 """
 
-
 learning_rate = 3e-4
-steps = 2048
-batch_size = 256
-epochs = 10
+steps = 1024
+batch_size = 56
+epochs = 5
 timesteps = 25000 #how often do we want the model to be saved? 
 gamma = 0.99
 gae_lambda = 0.95 ##
@@ -230,7 +229,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_13_5")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_27_1")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 
