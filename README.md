@@ -55,6 +55,7 @@ The-ViZDoom-Experience/
 ├── data/
 │   ├── README.md                       # Description of data sources
 │   ├── model_performance_data/         # Evaluation metrics, logs, plots
+│   ├── notebooks/                      # Jupyter Notebooks used to visualise data from evaluations
 │   └── trained_models/                 # Saved trained models
 │
 ├── meetings/

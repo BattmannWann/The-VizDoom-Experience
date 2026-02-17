@@ -1271,6 +1271,62 @@ self.width_crop, self.height_crop,  = 96, 72
 
 ---
 
+## Cacodemon_Recognition_1_24_100
+
+**Successful?**: Yes, model_3025000.zip 
+
+**Python File**: active_visual_model_training_lvl_1_.py
+
+```python
+learning_rate = 3e-4
+steps = 2048
+batch_size = 256
+epochs = 10
+timesteps = 25000 #how often do we want the model to be saved? 
+gamma = 0.99
+gae_lambda = 0.95 ##
+clip_range = 0.2
+ent_coef = 0.01
+vf_coef = 0.5
+max_grad_norm = 0.5
+target_kl = 0.03
+
+training_repeats = 1000
+
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
+```
+
+**Python File**: Active_Visual_Cacodemon_Recognition_env.py
+
+```python
+if action in [5, 6]:
+            reward += 0.05
+
+    #...
+
+self.width_crop, self.height_crop,  = 160, 120
+```
+
+<br>
+
+**Config File:**: 0
+
+<br>
+
+**ACS Script**:
+
+- **Cacodemon Kill Reward**: +10
+- **Other Enemy Kill Reward**: None
+
+- **Living Reward**: -100 / 1000 = 0.1
+- **Bullets Shot Reward**: None
+
+---
+
+---
+
+# Level 2
+
 ## Cacodemon_Recognition_2_1_80
 
 **Successful?**: No, can identify the Cacodemon but won't kill it. Need to adjust the entropy coefficient and see

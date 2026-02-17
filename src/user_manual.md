@@ -183,7 +183,7 @@ Assuming you have downloaded the following [folders](), here are some evaluation
 
 ### **Level 1**:
 
-- **100%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_26_100/model_4700000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 0 --episodes 10`
+- **100%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_24_100/model_1275000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 0 --episodes 10`
 
 - **80%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_16_80/model_1575000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 80 --episodes 10`
 
@@ -211,13 +211,13 @@ Assuming you have downloaded the following [folders](), here are some evaluation
 
 - **60%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_20_60/model_6475000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 60 --episodes 10`
 
-- **40%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_21_40/model_3200000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 40 --episodes 10`
+- **40%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_21_40/model_3000000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 40 --episodes 10`
 
 - **20%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_22_20/model_6850000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 20 --episodes 10`
 
-- **10%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_23_10/model_7100000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 10 --episodes 10`
+- **10%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_23_10/model_2650000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 10 --episodes 10`
 
-- **5%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_24_5/model_7125000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 5 --episodes 10`
+- **5%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_24_5/model_2800000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 5 --episodes 10`
 
 - **1%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_27_1/model_4775000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 1 --episodes 10`
 
