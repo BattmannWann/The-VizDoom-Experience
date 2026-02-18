@@ -187,9 +187,7 @@ Assuming you have downloaded the following [folders](), here are some evaluation
 
 - **80%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_16_80/model_1575000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 80 --episodes 10`
 
-
 - **60%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_23_60/model_1950000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 60 --episodes 10`
-
 
 - **40%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_18_40/model_3025000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 40 --episodes 10`
 
@@ -227,9 +225,9 @@ Assuming you have downloaded the following [folders](), here are some evaluation
 
 ## Baseline Models
 
-- **Level 1**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level 1/model_2450000.zip --sleep 0.035 --verbose "true" --config-path 0 --episodes 10`
+- **Level 1**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 1/model_2450000.zip --sleep 0.035 --verbose "true" --config-path 0 --episodes 10`
 
-- **Level 2**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level 2/model_3720000.zip --sleep 0.035 --verbose "true" --config-path 0 --episodes 10`
+- **Level 2**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/model_3720000.zip --sleep 0.035 --verbose "true" --config-path 1 --episodes 10`
 
 
 ---

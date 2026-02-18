@@ -13,21 +13,39 @@ from time import sleep
 from pprint import pformat
 import os
 import argparse
+from pathlib import Path
 
 
 def write_to_file(file_path, write_mode, content):
+    
+    if file_path[-4:] != ".txt":
+        file_path = f"{file_path}.txt" 
     
     try:
     
         with open(file_path, write_mode) as f:
             
             f.write(content)
-            
+        
+        print(f'\n{"=" * 40}')
         print("Successfully written to file!")
+        print(f'{"=" * 40}\n')
             
     except Exception as e:
         
         print(f"ERROR WRITING TO FILE: {file_path},\nsee: {e}")
+        
+        
+def get_proj_root() -> Path:
+    
+    curr_path = Path(__file__).resolve()
+    
+    for parent in [curr_path] + list(curr_path.parents):
+        
+        if (parent / ".git").exists() or (parent / "requirements.txt").exists():
+            return parent
+          
+    raise FileNotFoundError("Could not locate project root directory. Make sure that file `.git` or `requirements.txt` exist at project root.")
         
     
 def make_env(base):
@@ -120,29 +138,34 @@ def run(args):
     
     if args.output.lower() != "false":
         
+        file_name = args.output
+        
+        if file_name[-4:] != ".txt":
+            file_name = f"{file_name}.txt"
+        
         created = False
         write_mode = None
         
-        file_name = args.output
-        file_path = f"../../../../data/model_performance_data/"
+        ROOT_DIR = get_proj_root()
+        file_path = f"{ROOT_DIR}/data/model_performance_data/"
     
         if not os.path.exists(f"{file_path}{file_name}"):
             
-            print("File doesn't exist, creating file...")
+            print(f"\nFile: {file_path}{file_name} doesn't exist, creating file...")
             
             while created == False:
             
                 try:
                 
-                    open(f"{file_path}{file_name}.txt", "x")
+                    open(f"{file_path}{file_name}", "x")
                     created = True
                     write_mode = "w"
                     
-                    final_file_path = f"{file_path}{file_name}.txt"
+                    final_file_path = f"{file_path}{file_name}"
                     
                 except Exception as e:
                     
-                    print(f"ERROR, Creating File: {file_path}{file_name} was unsuccessful. See:\n{e}")
+                    print(f"\nERROR, Creating File: {file_path}{file_name} was unsuccessful. See:\n{e}")
                     ans = input("Do you want to try again? [Y/N]: ")
                     
                     if ans.lower() == "n":
@@ -160,13 +183,13 @@ def run(args):
             
             while True:
                 
-                full_path = f"{file_path}{args.output}"
+                full_path = f"{file_path}{file_name}"
                 
-                ans = input(f"File: {f'{full_path}.txt'} already exists. Would you like to continue? [Y/N]: ")
+                ans = input(f"\nFile: {f'{full_path}'} already exists. Would you like to continue? [Y/N]: ")
                 
                 if ans.lower() == "y": 
                     
-                    write_to_file(file_path = full_path, write_mode = "a", content = output_msg.strip("\n"))
+                    write_to_file(full_path, "a", output_msg.strip("\n"))
                     break
                             
                 else:

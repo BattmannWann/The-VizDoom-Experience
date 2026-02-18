@@ -34,3 +34,56 @@ This directory holds the following data:
     | 5% | 8x6 | 8 | 6 |
     | 1% | 1x1 | 1 | 1 |
 
+
+- All commands run to generate test files will be listed here in regards to repeatability:
+
+    - Baseline
+
+        - Level 1: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 1/model_2450000.zip --config-path 0 --episodes 100 --output baseline_lvl_1_model`
+
+        - Level 2: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/model_3720000.zip --config-path 1 --episodes 100 --output baseline_lvl_2_model`
+
+        - Level 3
+
+
+    - Active
+
+        - Level 1 
+
+            - 100%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_24_100/model_1275000.zip --active "true" --config-path 0 --reduction 0 --episodes 100 --output active_lvl_1_100_model`
+
+            - 80%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_16_80/model_1575000.zip --active "true" --config-path 0 --reduction 80 --episodes 100 --output active_lvl_1_80_model`
+
+            - 60%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_23_60/model_1950000.zip --active "true" --config-path 0 --reduction 60 --episodes 100 --output active_lvl_1_60_model`
+
+            - 40%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_18_40/model_3025000.zip --active "true" --config-path 0 --reduction 40 --episodes 100 --output active_lvl_1_40_model`
+
+            - 20%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_19_20/model_1975000.zip --active "true" --config-path 0 --reduction 20 --episodes 100 --output active_lvl_1_20_model`
+
+            - 10%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_20_10/model_2000000.zip --active "true" --config-path 0 --reduction 10 --episodes 100 --output active_lvl_1_10_model`
+
+            - 5%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_21_5/model_2100000.zip --active "true" --config-path 0 --reduction 5 --episodes 100 --output active_lvl_1_5_model`
+
+            - 1%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_22_1/model_2100000.zip --active "true" --config-path 0 --reduction 1 --episodes 100 --output active_lvl_1_1_model`
+
+
+        - Level 2
+
+            - 100%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_26_100/model_4700000.zip --active "true" --config-path 1 --reduction 0 --episodes 100 --output active_lvl_2_100_model.txt`
+
+            - 80%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_19_80/model_6350000.zip --active "true" --config-path 1 --reduction 80 --episodes 100 --output active_lvl_2_80_model`
+
+            - 60%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_20_60/model_6475000.zip --active "true" --config-path 1 --reduction 60 --episodes 100 --output active_lvl_2_60_model`
+
+            - 40%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_21_40/model_3000000.zip --active "true" --config-path 1 --reduction 40 --episodes 100 --output active_lvl_2_40_model`
+
+            - 20%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_22_20/model_6850000.zip --active "true" --config-path 1 --reduction 20 --episodes 100 --output active_lvl_2_20_model`
+
+            - 10%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_23_10/model_2650000.zip --active "true" --config-path 1 --reduction 10 --episodes 100 --output active_lvl_2_10_model`
+
+            - 5%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_24_5/model_2800000.zip --active "true" --config-path 1 --reduction 5 --episodes 100 --output active_lvl_2_5_model`
+
+            - 1%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_27_1/model_4775000.zip --active "true" --config-path 1 --reduction 1 --episodes 100 --output active_lvl_2_1_model`
+
+
+        - Level 3
