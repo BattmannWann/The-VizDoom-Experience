@@ -35,7 +35,14 @@ This directory holds the following data:
     | 1% | 1x1 | 1 | 1 |
 
 
-- All commands run to generate test files will be listed here in regards to repeatability:
+- All commands run to generate model performance files will be listed here in regards to repeatability, as well as what rewards are given across all models and levels, to ensure fair results:
+
+
+    - **Reward Structure**
+
+        - Level 1: Cacodemon Killed = +20, Living Reward = -1, Bullets Shot = -1
+        - Level 2: Cacodemon Killed = +20, Wrong Enemy Killed = -20, Living Reward = -1, Bullets Shot = -1
+        - Level 3: SAME AS LEVEL 2
 
     - Baseline
 
@@ -43,7 +50,11 @@ This directory holds the following data:
 
         - Level 2: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/model_3720000.zip --config-path 1 --episodes 100 --output baseline_lvl_2_model`
 
-        - Level 3
+        - Level 3: Will be tested both with the `Level 1` model and the `Level 2` model. So, the above commands change into:
+
+            - Level 1: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 1/model_2450000.zip --config-path 2 --episodes 100 --output baseline_lvl_1_model_on_lvl_3`
+
+            - Level 2: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/model_3720000.zip --config-path 2 --episodes 100 --output baseline_lvl_2_model_on_lvl_3`
 
 
     - Active
@@ -86,4 +97,4 @@ This directory holds the following data:
             - 1%: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_27_1/model_4775000.zip --active "true" --config-path 1 --reduction 1 --episodes 100 --output active_lvl_2_1_model`
 
 
-        - Level 3
+        - Level 3: Each trained model on each percentage reduction of each level will be tested in this unknown environment, to understand how, if at all, generalisable the actions and understanding that the model learned is. This means that the `--config-path` needs to be changed to 2, and a suitable output file name chosen.
