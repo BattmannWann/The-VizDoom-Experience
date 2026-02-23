@@ -184,8 +184,10 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         for lab in state.labels:
             
             if lab.object_name.lower() == "cacodemon":
+                
+                if self.verbose == "true":
 
-                print("Looked at a Cacodemon")
+                    print("Looked at a Cacodemon")
                 
                 cx = lab.x + lab.width / 2
                 cy = lab.y + lab.height / 2
@@ -247,9 +249,7 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         #sleep(0.035)
         
         if self.verbose == "true":
-            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")      
-        
-        print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")      
+            print(f"\n\n Action reward: {reward}, reward_scale = {self.reward_scale}, action taken: {actions[action]}")          
         
         
         if not done:
@@ -281,6 +281,9 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
     
     def reset(self, seed = None, options = None):
+        
+        if self.verbose == "true":
+            print(f"Seed: {seed}, self._seed: {self._seed}")
         
         self._seed = seed
         
