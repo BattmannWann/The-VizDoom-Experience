@@ -12,7 +12,7 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_2_7"
+models_directory = "../models_baseline/CacodemonRecognition_2_7_836"
 logs_directory = "../logs"
 
 if not os.path.exists(models_directory):
@@ -37,7 +37,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_7.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_7_836.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -150,15 +150,15 @@ Recommended Value Ranges for all Hyperparameters:
 
 # lr_schedule = linear_lr_schedule(initial_value = 3e-5, final_value = 1e-5, warmup_ratio = 0.05)
 
-learning_rate = 3e-4  #3e-4 #Adam optimiser default # 0.0001
+learning_rate = 3e-4
 steps = 2048
-batch_size = 256 #32
+batch_size = 256
 epochs = 10
-timesteps = 50000 #how often do we want the model to be saved? 
+timesteps = 25000 #how often do we want the model to be saved? 
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
-ent_coef = 0.01
+ent_coef = 0.05
 vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
@@ -168,7 +168,7 @@ training_repeats = 1000
 lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
-env.seed(123)
+env.seed(836)
 
 env.reset()
 
@@ -253,7 +253,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 123,
+    seed = 836,
 )
 
 
@@ -275,7 +275,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_7")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_7_836")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

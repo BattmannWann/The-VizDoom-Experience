@@ -141,7 +141,7 @@ class CacodemonRecognitionEnv(gym.Env):
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
         
         alignment = self._get_cacodemon_alignment_reward()
-        reward += 0.01 * alignment
+        reward += 0.05 * alignment
         
         done = self.game.is_episode_finished()
         
@@ -172,6 +172,9 @@ class CacodemonRecognitionEnv(gym.Env):
     
     
     def reset(self, seed = None, options = None):
+        
+        if self.verbose == "true":
+            print(f"Seed: {seed}, self._seed: {self._seed}")
         
         seed = self._seed
         

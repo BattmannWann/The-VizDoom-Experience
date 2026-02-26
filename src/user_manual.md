@@ -227,7 +227,7 @@ Assuming you have downloaded the following [folders](), here are some evaluation
 
 - **Level 1**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 1/model_2450000.zip --sleep 0.035 --verbose "true" --config-path 0 --episodes 10`
 
-- **Level 2**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/model_3720000.zip --sleep 0.035 --verbose "true" --config-path 1 --episodes 10`
+- **Level 2**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/CacodemonRecognition_2_7/model_2275000.zip --sleep 0.035 --verbose "true" --config-path 1 --episodes 10`
 
 
 ---

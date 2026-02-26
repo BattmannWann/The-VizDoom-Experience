@@ -1,3 +1,0 @@
-Level,Active_Mean,Baseline_Mean,Active_Median,Baseline_Median,T_Test_P_Value,T_Test_Significant,Mann_Whitney_P_Value,Mann_Whitney_Significant
-Level 1,9.85,9.89,9.9,9.9,1.0206208014362283e-05,Yes,0.00012784174394258124,Yes
-Level 2,8.55,9.63,9.8,9.8,8.845311632014195e-08,Yes,0.7999621540119575,No
