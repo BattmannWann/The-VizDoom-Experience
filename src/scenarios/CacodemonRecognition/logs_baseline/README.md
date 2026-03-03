@@ -1306,9 +1306,9 @@ model = PPO(
 
 ---
 
-## Cacodemon_Recognition_1_3_554434
+## Cacodemon_Recognition_1_3_8896
 
-**Successful?**: Yes, model_600000.zip
+**Successful?**: 
 
 **Python File**: baseline_training_lvl_1.py
 
@@ -1331,7 +1331,7 @@ training_repeats = 1000
 lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
-env.seed(554434)
+env.seed(8896)
 
 #...
 
@@ -1351,7 +1351,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 554434,
+    seed = 8896,
 )
 
 ```

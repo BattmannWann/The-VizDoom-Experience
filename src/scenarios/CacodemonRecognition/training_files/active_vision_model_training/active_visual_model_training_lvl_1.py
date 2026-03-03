@@ -11,8 +11,8 @@ from stable_baselines3.common.monitor import Monitor
 
 sys.path.append("../envs")
 
-models_directory = "../models_active/Cacodemon_Recognition_1_19_20_2443"
-logs_directory = "../logs/Active_Vision"
+models_directory = "../models_active/Cacodemon_Recognition_1_22_1_1"
+logs_directory = "../logs_active/Active_Vision"
 
 if not os.path.exists(models_directory):
     os.makedirs(models_directory)
@@ -36,8 +36,8 @@ if not os.path.exists(logs_directory):
 
 def make_env():
     
-    base = CacodemonRecognitionActiveEnv(config_path = 0, render = "rgb_array", reduction = 20)
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_1_19_20_2443.csv")) 
+    base = CacodemonRecognitionActiveEnv(config_path = 0, render = "rgb_array", reduction = 1)
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_1_22_1_1.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -136,14 +136,14 @@ Recommended Value Ranges for all Hyperparameters:
 
 
 learning_rate = 3e-4
-steps = 2048
-batch_size = 256
-epochs = 10
+steps = 1024
+batch_size = 56
+epochs = 5
 timesteps = 25000 #how often do we want the model to be saved? 
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
-ent_coef = 0.01
+ent_coef = 0.05
 vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
@@ -154,7 +154,7 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
 
-env.seed(2443)
+env.seed(1)
 env.reset()
 
 
@@ -214,7 +214,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 2443,
+    seed = 1,
 )
 
 # training loop, model saves every `timesteps` and is trained `training_repeats` times...
@@ -230,7 +230,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_1_19_20_2443")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_1_22_1_1")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

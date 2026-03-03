@@ -12,8 +12,8 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_BASELINE_EVALUATION_W_SEED_554434"
-logs_directory = "../logs"
+models_directory = "../models_baseline/CacodemonRecognition_BASELINE_EVALUATION_W_SEED_8896"
+logs_directory = "../logs_baseline"
 
 if not os.path.exists(models_directory):
     os.makedirs(models_directory)
@@ -27,7 +27,7 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 0, render = "rgb_array", verbose = "true")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_BASELINE_EVALUATION_W_SEED_554434.csv")) 
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_BASELINE_EVALUATION_W_SEED_8896.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -142,7 +142,7 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
 
-env.seed(554434)
+env.seed(8896)
 env.reset()
 
 
@@ -203,7 +203,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 554434,
+    seed = 8896,
 )
 
 # training loop, model saves every `timesteps` and is trained `training_repeats` times...
@@ -219,7 +219,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"CacodemonRecognition_BASELINE_EVALUATION_W_SEED_554434")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"CacodemonRecognition_BASELINE_EVALUATION_W_SEED_8896")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

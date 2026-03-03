@@ -15,7 +15,7 @@ Cacodemon_Recognition (scenario) _ N (level number) _ N' (iteration number) _ Im
 
 - **Python Files**: *These detail the hyperparameter settings and any other relevant variables*
 
-- **Configuration Files**: *A note of what config file was used (using indicies)*: See the active vision environment file's `scenario_configs` list for more info
+- **Configuration Files**: *A note of what config file was used (using indices)*: See the active vision environment file's `scenario_configs` list for more info
 
 ---
 
@@ -2597,17 +2597,18 @@ self.width_crop, self.height_crop,  = 1, 1
 
 # LEVEL 1
 
-The best trained models from level 1 active vision will be selected and retrained with different seeds to prove that they can indeed learn. As there are several sublevels, only the following reductions will be chosen from each, as if they can still learn then the rest will be able to anyways: $\set{80, 20, 1}$. 
+The best trained models from level 1 active vision will be selected and retrained with different seeds to prove that they can indeed learn. All reductions will be checked.
 
 Naming conventions will take the trained models and append a seed at the end of it. 
 
+File configs will be listed in the first; assume that if it is not mentioned that this means that they have not changed.
+
 ---
+## 100%
 
-## 80%
+## Cacodemon_Recognition_1_24_100_6003
 
-## Cacodemon_Recognition_1_16_80_580
-
-**Successful?**: Yes, model_725000.zip
+**Successful?**: Yes
 
 **Python File**: active_visual_model_training_lvl_1_.py
 
@@ -2655,11 +2656,36 @@ self.width_crop, self.height_crop,  = 128, 96
 - **Living Reward**: -100 / 1000 = 0.1
 - **Bullets Shot Reward**: None
 
+
+---
+
+
+## Cacodemon_Recognition_1_24_100_3713
+
+**Successful?**: Yes
+
+
+---
+
+
+## Cacodemon_Recognition_1_24_100_9955
+
+**Successful?**: Yes
+
+
+---
+
+---
+
+## 80%
+
+## Cacodemon_Recognition_1_16_80_580
+
+**Successful?**: Yes, model_725000.zip
+
 ---
 
 ## Cacodemon_Recognition_1_16_80_333
-
-SAME CONFIGS AS THE PREVIOUS, ONLY DIFFERENCE IS THE SEED. The first example provides all the code so easier reference can be made. 
 
 **Successful?**: Yes, model_800000.zip
 
@@ -2667,9 +2693,53 @@ SAME CONFIGS AS THE PREVIOUS, ONLY DIFFERENCE IS THE SEED. The first example pro
 
 ## Cacodemon_Recognition_1_16_80_666
 
-SAME CONFIGS AS THE PREVIOUS, ONLY DIFFERENCE IS THE SEED. The first example provides all the code so easier reference can be made. 
-
 **Successful?**: Yes, model_300000.zip
+
+---
+
+---
+
+## 60%
+
+## Cacodemon_Recognition_1_23_60_4687
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_23_60_9218
+
+**Successful?**: 
+
+---
+
+## Cacodemon_Recognition_1_23_60_3419
+
+**Successful?**: Yes
+
+---
+
+---
+
+---
+## 40%
+
+## Cacodemon_Recognition_1_18_40_2530
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_18_40_2111
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_18_40_1220
+
+**Successful?**: Yes
+
 
 ---
 
@@ -2708,9 +2778,7 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 if action in [5, 6]:
             reward += 0.05
 
-    #...
 
-self.width_crop, self.height_crop,  = 32, 24
 ```
 
 <br>
@@ -2731,13 +2799,56 @@ self.width_crop, self.height_crop,  = 32, 24
 
 ## Cacodemon_Recognition_1_19_20_20899
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_1_19_20_2443
 
-**Successful?**: 
+**Successful?**: Yes
+
+---
+
+---
+## 10%
+
+## Cacodemon_Recognition_1_20_10_7742
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_20_10_527
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_20_10_560
+
+**Successful?**: Yes
+
+---
+
+---
+## 5%
+
+## Cacodemon_Recognition_1_21_5_5109
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_21_5_9717
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_1_21_5_4593
+
+**Successful?**: Yes
+
 
 ---
 
@@ -2747,7 +2858,7 @@ self.width_crop, self.height_crop,  = 32, 24
 
 ## Cacodemon_Recognition_1_22_1_30
 
-**Successful?**: Yes, model_2100000.zip
+**Successful?**: Yes
 
 **Python File**: active_visual_model_training_lvl_1_.py
 
@@ -2799,14 +2910,14 @@ self.width_crop, self.height_crop,  = 1, 1
 
 ## Cacodemon_Recognition_1_22_1_40
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 
 ## Cacodemon_Recognition_1_22_1
 
-**Successful?**: 57731
+**Successful?**: Yes
 
 ---
 
@@ -2814,15 +2925,55 @@ self.width_crop, self.height_crop,  = 1, 1
 
 # LEVEL 2
 
-The best trained models from level 1 active vision will be selected and retrained with different seeds to prove that they can indeed learn. As there are several sublevels, only the following reductions will be chosen from each, as if they can still learn then the rest will be able to anyways: $\set{60, 40, 10}$
+The best trained models from level 1 active vision will be selected and retrained with different seeds to prove that they can indeed learn. All levels of reduction were analysed. Assume that configs do not differ from the first listed unless stated otherwise. 
+
+---
+## 100%
+
+## Cacodemon_Recognition_2_26_100_786
+
+**Successful?**: Yes
 
 ---
 
+## Cacodemon_Recognition_2_26_100_3809
+
+**Successful?**: Yes
+
+---
+
+## Cacodemon_Recognition_2_26_100_2877
+
+**Successful?**: Yes
+
+
+---
+## 80%
+
+## Cacodemon_Recognition_2_19_80_8927
+
+**Successful?**: 
+
+---
+
+## Cacodemon_Recognition_2_19_80_8727
+
+**Successful?**: 
+
+---
+
+## Cacodemon_Recognition_2_19_80_7320
+
+**Successful?**: 
+
+---
+
+---
 ## 60%
 
 ## Cacodemon_Recognition_2_20_60_5456
 
-**Successful?**: Yes, performs excellently, identifying and moving towards the Cacodemon before killing it: `model_6475000.zip`
+**Successful?**: 
 
 **Python File**: active_visual_model_training_lvl_2_.py
 
@@ -2851,9 +3002,6 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 if action in [5, 6]:
             reward += 0.05
 
-    #...
-
-self.width_crop, self.height_crop,  = 96, 72
 ```
 
 <br>
@@ -2892,52 +3040,6 @@ self.width_crop, self.height_crop,  = 96, 72
 
 **Successful?**: 
 
-**Python File**: active_visual_model_training_lvl_2_.py
-
-```python
-learning_rate = 3e-4
-steps = 2048
-batch_size = 256
-epochs = 10
-timesteps = 25000 #how often do we want the model to be saved? 
-gamma = 0.99
-gae_lambda = 0.95 ##
-clip_range = 0.2
-ent_coef = 0.05
-vf_coef = 0.5
-max_grad_norm = 0.5
-target_kl = 0.03
-
-training_repeats = 1000
-
-lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
-```
-
-**Python File**: Active_Visual_Cacodemon_Recognition_env.py
-
-```python
-if action in [5, 6]:
-            reward += 0.05
-
-    #...
-
-self.width_crop, self.height_crop,  = 64, 48
-```
-
-<br>
-
-**Config File:**: 1
-
-<br>
-
-**ACS Script**:
-
-- **Cacodemon Kill Reward**: +10
-- **Other Enemy Kill Reward**: -15
-
-- **Living Reward**: -100 / 1000 = 0.1
-- **Bullets Shot Reward**: None
-
 ---
 
 ## Cacodemon_Recognition_2_21_40_6000
@@ -2947,6 +3049,30 @@ self.width_crop, self.height_crop,  = 64, 48
 ---
 
 ## Cacodemon_Recognition_2_21_40_4000
+
+**Successful?**: 
+
+---
+
+---
+
+---
+## 20%
+
+
+## Cacodemon_Recognition_2_22_20_8801
+
+**Successful?**: 
+
+---
+
+## Cacodemon_Recognition_2_22_20_432
+
+**Successful?**: 
+
+---
+
+## Cacodemon_Recognition_2_22_20_4223
 
 **Successful?**: 
 
@@ -2987,9 +3113,6 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 if action in [5, 6]:
             reward += 0.05
 
-    #...
-
-self.width_crop, self.height_crop,  = 6, 12
 ```
 
 <br>
@@ -3017,4 +3140,50 @@ self.width_crop, self.height_crop,  = 6, 12
 ## Cacodemon_Recognition_2_23_10_433356
 
 **Successful?**:
+
+---
+
+---
+## 5%
+
+## Cacodemon_Recognition_2_24_5_8840
+
+**Successful?**:
+
+---
+
+## Cacodemon_Recognition_2_24_5_1967
+
+**Successful?**:
+
+---
+
+## Cacodemon_Recognition_2_24_5_2209
+
+**Successful?**:
+
+---
+
+---
+## 1%
+
+## Cacodemon_Recognition_2_27_1_2564
+
+**Successful?**:
+
+---
+
+## Cacodemon_Recognition_2_27_1_2141
+
+**Successful?**:
+
+---
+
+## Cacodemon_Recognition_2_27_1_1856
+
+**Successful?**:
+
+---
+
+---
 

@@ -257,8 +257,12 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             obs = self._get_crop_image(frame)
             
             if self.verbose == "true":
-                cv2.imshow("Cropped image", obs)
-                cv2.imshow("Original", frame)
+                
+                colour_corrected_obs = cv2.cvtColor(obs, cv2.COLOR_BGR2RGB)
+                colour_corrected_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                
+                cv2.imshow("Cropped image", colour_corrected_obs)
+                cv2.imshow("Original", colour_corrected_frame)
                 cv2.waitKey(1)
             
         else:
