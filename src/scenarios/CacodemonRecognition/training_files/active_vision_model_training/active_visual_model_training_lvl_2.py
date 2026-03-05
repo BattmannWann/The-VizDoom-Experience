@@ -11,7 +11,7 @@ from stable_baselines3.common.monitor import Monitor
 
 sys.path.append("../envs")
 
-models_directory = "../models_active/Cacodemon_Recognition_2_19_80_7320"
+models_directory = "../models_active/Cacodemon_Recognition_2_22_20_4223"
 logs_directory = "../logs_active/Active_Vision"
 
 if not os.path.exists(models_directory):
@@ -36,8 +36,8 @@ if not os.path.exists(logs_directory):
 
 def make_env():
     
-    base = CacodemonRecognitionActiveEnv(config_path = 1, render = "rgb_array", reduction = 80)
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_19_80_7320.csv")) 
+    base = CacodemonRecognitionActiveEnv(config_path = 1, render = "rgb_array", reduction = 20)
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_22_20_4223.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -153,7 +153,7 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
 
-env.seed(7320)
+env.seed(4223)
 env.reset()
 
 
@@ -213,7 +213,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 7320,
+    seed = 4223,
 )
 
 # training loop, model saves every `timesteps` and is trained `training_repeats` times...
@@ -229,7 +229,7 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_19_80_7320")
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_22_20_4223")
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

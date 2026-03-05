@@ -2952,19 +2952,19 @@ The best trained models from level 1 active vision will be selected and retraine
 
 ## Cacodemon_Recognition_2_19_80_8927
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_19_80_8727
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_19_80_7320
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
@@ -2973,7 +2973,7 @@ The best trained models from level 1 active vision will be selected and retraine
 
 ## Cacodemon_Recognition_2_20_60_5456
 
-**Successful?**: 
+**Successful?**: Yes
 
 **Python File**: active_visual_model_training_lvl_2_.py
 
@@ -3022,13 +3022,13 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_20_60_555555
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_20_60_776633
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
@@ -3036,19 +3036,19 @@ if action in [5, 6]:
 
 ## 40%
 
-## Cacodemon_Recognition_2_21_40_49
+## Cacodemon_Recognition_2_21_40_4194
 
 **Successful?**: 
 
 ---
 
-## Cacodemon_Recognition_2_21_40_6000
+## Cacodemon_Recognition_2_21_40_1356
 
 **Successful?**: 
 
 ---
 
-## Cacodemon_Recognition_2_21_40_4000
+## Cacodemon_Recognition_2_21_40_6325
 
 **Successful?**: 
 
