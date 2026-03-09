@@ -2709,7 +2709,7 @@ self.width_crop, self.height_crop,  = 128, 96
 
 ## Cacodemon_Recognition_1_23_60_9218
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
@@ -3038,19 +3038,19 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_21_40_4194
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_21_40_1356
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_21_40_6325
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
@@ -3062,19 +3062,19 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_22_20_8801
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_22_20_432
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_22_20_4223
 
-**Successful?**: 
+**Successful?**: Yes
 
 ---
 
@@ -3084,7 +3084,7 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_23_10_20000
 
-**Successful?**: 
+**Successful?**: Yes
 
 **Python File**: active_visual_model_training_lvl_2_.py
 
@@ -3133,13 +3133,13 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_23_10_4356
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_23_10_433356
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
@@ -3148,19 +3148,19 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_24_5_8840
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_24_5_1967
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_24_5_2209
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
