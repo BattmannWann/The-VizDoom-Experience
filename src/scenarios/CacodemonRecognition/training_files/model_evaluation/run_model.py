@@ -67,7 +67,8 @@ def run(args):
         #seed = 123,
         verbose = args.verbose,
         reduction = args.reduction,
-        padded = args.padded
+        padded = args.padded,
+        evaluation = "true"
         ) 
         
     else:
@@ -76,7 +77,8 @@ def run(args):
             config_path = args.config_path,
             render = "human",
             #seed = 123,
-            verbose = args.verbose 
+            verbose = args.verbose,
+            evaluation = "true"
         )
         
     env = make_env(env)

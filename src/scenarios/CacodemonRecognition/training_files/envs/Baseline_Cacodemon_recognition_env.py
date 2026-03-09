@@ -9,7 +9,9 @@ class CacodemonRecognitionEnv(gym.Env):
     
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 35}
     
-    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false"):
+    def __init__(self, config_path, render = "human", 
+                 reward_scale_factor = 1000.0, seed = None, 
+                 verbose = "false", evaluation = "false"):
         
         """
         Constructor for the Cacodemon Recognition Scenario Environment.
@@ -29,6 +31,8 @@ class CacodemonRecognitionEnv(gym.Env):
         
         self._seed = seed
         self.reward_scale = reward_scale_factor
+        
+        self.eval = evaluation
         
         scenario_configs = [
             "../config_files/Cacodemon_Recognition_most_basic.cfg", 
@@ -140,8 +144,10 @@ class CacodemonRecognitionEnv(gym.Env):
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
         
-        alignment = self._get_cacodemon_alignment_reward()
-        reward += 0.05 * alignment
+        if self.eval == "false":
+        
+            alignment = self._get_cacodemon_alignment_reward()
+            reward += 0.05 * alignment
         
         done = self.game.is_episode_finished()
         

@@ -10,7 +10,10 @@ class CacodemonRecognitionActiveEnv(gym.Env):
     
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 35}
     
-    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, seed = None, verbose = "false", reduction = 0, padded = "false"):
+    def __init__(self, config_path, render = "human", reward_scale_factor = 1000.0, 
+                 seed = None, verbose = "false", 
+                 reduction = 0, padded = "false",
+                 evaluation = "false"):
         
         """
         Constructor for the Cacodemon Recognition Scenario Environment.
@@ -33,6 +36,8 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         
         self._seed = seed
         self.reward_scale = reward_scale_factor
+        
+        self.eval = evaluation
         
         scenario_configs = [
             "../config_files/Cacodemon_Recognition_most_basic.cfg", 
@@ -237,12 +242,14 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         _ = self.game.make_action(action_vector, 4)
 
         reward = self.game.get_game_variable(vzd.GameVariable.USER1) / self.reward_scale
-
-        alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
-        reward += 0.05 * alignment
         
-        if action in [5, 6]:
-            reward += 0.05
+        if self.eval == "false":
+
+            alignment = self._get_cacodemon_alignment_reward() #i.e. did the agent look at the cacodemon?
+            reward += 0.05 * alignment
+        
+            if action in [5, 6]:
+                reward += 0.05
 
         done = self.game.is_episode_finished()
         
