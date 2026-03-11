@@ -13,7 +13,7 @@ ACTIVE_TRAINED_MODELS_DIR="${PROJ_DIR}/data/trained_models/Cacodemon_Recognition
 BASELINE_TRAINED_MODELS_DIR="${PROJ_DIR}/data/trained_models/Cacodemon_Recognition_baseline_models"
 
 ERROR_LOG="${PROJ_DIR}/src/tests/bash_scripts/error.log"
-SCRIPTS_TEST_DIR="${PROJ_DIR}/src/tests/bash_scripts/"
+SCRIPTS_TEST_DIR="${PROJ_DIR}/src/tests/bash_scripts"
 
 
 #FUNCTIONS
@@ -99,9 +99,14 @@ run_model() {
     fi
 
     if [ "$model_type" == "active" ]; then
-        python -m model_evaluation.run_model --in-model-path "${model_path_active}" --config-path 1 --verbose 'true' --active 'true' --reduction 20 --sleep 0.035 --episodes 4 2>> "$ERROR_LOG"
+        
+        python -m model_evaluation.run_model --in-model-path "${model_path_active}" --config-path 1 --verbose 'true' --active 'true' --reduction 20 --sleep 0.035 --episodes 4 --output "$active_output" 2>> "$ERROR_LOG"
+        mv "${PROJ_DIR}/data/model_performance_data/${active_output}" "${SCRIPTS_TEST_DIR}/results/"
+    
     else
-        python -m model_evaluation.run_model --in-model-path "${model_path_baseline}" --config-path 1 --sleep 0.035 --episodes 4 2>> "$ERROR_LOG"
+        
+        python -m model_evaluation.run_model --in-model-path "${model_path_baseline}" --config-path 1 --sleep 0.035 --episodes 4 --output "$baseline_output" 2>> "$ERROR_LOG"
+        mv "${PROJ_DIR}/data/model_performance_data/${baseline_output}" "${SCRIPTS_TEST_DIR}/results/"
     fi
 
     cd "${SCRIPTS_TEST_DIR}" || true
@@ -229,7 +234,7 @@ printf "    - Agent weights have been loaded in correctly, based on performance
       (i.e. does the agent seek out and kill the Cacodemon?) \n\n"
 
 printf "    - Agent performance can be successfully saved and written to disk (into a file):
-       This file will be found in the test directory under 'results/TEST_RUN.txt' \n"
+       This file will be found in the test directory under 'results/TEST_RUN_model_type.txt' \n"
 
 
 printf "\nRunning Test %d : run_model.py on Baseline Model" "${total_tests}"
