@@ -263,8 +263,8 @@ if [[ ${#problem_tests[@]} -gt 0 ]]; then
 
     printf "And see the error log for more information: \n\n"
     echo "TO EXIT, PRESS 'q' " >> "$ERROR_LOG"
-    less error.log
-    rm error.log
+    less "$ERROR_LOG"
+    rm "$ERROR_LOG"
 fi
 
 printf "\n\n=========================================\n\n"
