@@ -12,6 +12,8 @@ MEETINGS_DIR="${PROJ_DIR}/meetings/"
 PRESENTATION_DIR="${PROJ_DIR}/presentation/"
 SRC_DIR="${PROJ_DIR}/src/"
 
+TRAINED_MODELS_DIR="${DATA_DIR}trained_models/"
+
 
 # === FILES ===
 
@@ -32,7 +34,7 @@ printf "\n\n=== FOREWORD ===\n\n"
 printf "This file has been designed to check the integrity of the project file system. It will do the following: \n\n"
 printf "    - Check that all required folders (that which are not checked by programs already) exist\n"
 printf "    - Check that all required files (that aren't automatically generated) exist\n"
-printf "    - ...\n"
+
 printf "\n=================\n\n"
 
 read -r -p "Would you like to continue? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
@@ -52,6 +54,25 @@ if [ -d "$DATA_DIR" ]; then
 else
 
     printf "Data directory was not found! Should be at:\n %s \n\n" "${DATA_DIR}"
+
+fi
+
+(( total_tests += 1 ))
+
+
+if [ -d "$TRAINED_MODELS_DIR" ]; then
+
+    printf "Trained models directory has been found!\n"
+    (( tests_passed += 1 ))
+
+else
+
+    printf "\n\nTrained models directory was not found! Should be at: \n %s \n\n" "${TRAINED_MODELS_DIR}"
+    printf "You will want to ensure to download these! \n\n" 
+
+    printf "There is guidance in the project README.md or this can be done automatically by the setup_project.sh script 
+found in the root project directory: \n %s \n\n" "${PROJ_DIR}/setup_project.sh"
+
 
 fi
 
@@ -174,7 +195,7 @@ fi
 
 printf "==================================================================================\n\n"
 
-percent_tests_passed=$(( (tests_passed / total_tests) * 100  ))
+percent_tests_passed=$(( (tests_passed * 100) / total_tests ))
 
 printf "TESTS COMPLETE \n"
 printf "Tests Passed: ${tests_passed}, Total Tests: ${total_tests}, Percentage: ${percent_tests_passed}%% \n\n"
