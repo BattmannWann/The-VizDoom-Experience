@@ -21,6 +21,8 @@ _vizdoom.ini
 vizdoom.ini
 *.dbs
 
+trained_models
+
 output_files/
 
 # === PYTHON ===
