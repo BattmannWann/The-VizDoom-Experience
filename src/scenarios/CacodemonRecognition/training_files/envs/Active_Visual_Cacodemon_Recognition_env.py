@@ -4,6 +4,7 @@ import numpy as np
 import vizdoom as vzd
 from time import sleep
 import cv2
+import os
 
 
 class CacodemonRecognitionActiveEnv(gym.Env):
@@ -38,17 +39,14 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         self.reward_scale = reward_scale_factor
         
         self.eval = evaluation
-        
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
         scenario_configs = [
-            "../config_files/Cacodemon_Recognition_most_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_Final.cfg"
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_most_basic.cfg"),
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_basic.cfg"),
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_Final.cfg")
         ]
-        
-        #passed parameters checks...
-        
-        #assert type(config_path) == int and 0 <= config_path < len(scenario_configs), f"\n\nconfig_path NEEDS to be an integer as you accessing a list. Range is within 0-{len(scenario_configs)}\n\n" 
-        #assert render in self.metadata["render_modes"], f"\n\nIncorrect render mode provided, needs to be: {self.metadata["render_modes"]}\n\n"
         
         
         #Game initialisation
@@ -69,8 +67,6 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             
             print(f"Resolution is: {self.game.get_screen_format}")
             
-        # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
-        #self.game.set_living_reward(-0.1)
         
         self.game.init()
         

@@ -3,7 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import vizdoom as vzd
 from time import sleep
-
+import os
 
 class CacodemonRecognitionEnv(gym.Env):
     
@@ -34,17 +34,13 @@ class CacodemonRecognitionEnv(gym.Env):
         
         self.eval = evaluation
         
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
         scenario_configs = [
-            "../config_files/Cacodemon_Recognition_most_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_basic.cfg", 
-            "../config_files/Cacodemon_Recognition_Final.cfg"
-        ]
-        
-        #passed parameters checks...
-        
-        #assert type(config_path) == int and 0 <= config_path < len(scenario_configs), f"\n\nconfig_path NEEDS to be an integer as you accessing a list. Range is within 0-{len(scenario_configs)}\n\n" 
-        #assert render in self.metadata["render_modes"], f"\n\nIncorrect render mode provided, needs to be: {self.metadata["render_modes"]}\n\n"
-        
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_most_basic.cfg"),
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_basic.cfg"),
+            os.path.join(current_dir, "../../config_files/Cacodemon_Recognition_Final.cfg")
+        ]        
         
         #Game initialisation
         
@@ -60,9 +56,6 @@ class CacodemonRecognitionEnv(gym.Env):
             
             print(f"\n\nAvailable buttons: {[b.name for b in self.game.get_available_buttons()]}\n\n")  
             print(f"\n\nAvailable game variables: {[v.name for v in self.game.get_available_game_variables()]}\n\n") 
-        
-        # Sets the living reward (for each move) to -1; this may need altered or removed depending on how training goes
-        #self.game.set_living_reward(-0.1)
         
         self.game.init()
         
