@@ -9,10 +9,122 @@ CACODEMON_SRC="$PROJ_DIR/src/scenarios/CacodemonRecognition"
 
 TRAINING_FILES_DIR="${CACODEMON_SRC}/training_files"
 
-ACTIVE_VISION_TRAINING_DIR="$/active_vision_model_training/"
-BASELINE_TRAINING_DIR="$/baseline_model_training/"
+ACTIVE_TRAINED_MODELS_DIR="${PROJ_DIR}/data/trained_models/Cacodemon_Recognition_active_vision_models"
+BASELINE_TRAINED_MODELS_DIR="${PROJ_DIR}/data/trained_models/Cacodemon_Recognition_baseline_models"
+
+ERROR_LOG="${PROJ_DIR}/src/tests/bash_scripts/error.log"
+SCRIPTS_TEST_DIR="${PROJ_DIR}/src/tests/bash_scripts/"
 
 
+#FUNCTIONS
+remove_folders_active() {
+
+    rm -r "${CACODEMON_SRC}/models_active/TEST/"
+    rm -r "${CACODEMON_SRC}/logs_active/TEST/"
+
+}
+
+
+remove_folders_baseline() {
+
+    rm -r "${CACODEMON_SRC}/models_baseline/TEST/"
+    rm -r "${CACODEMON_SRC}/logs_baseline/TEST/"
+}
+
+#python -m "active_vision_model_training.active_visual_model_training_lvl_1" 2>> error.log
+
+
+
+train_model() {
+
+    local type=$1
+    local level=$2
+
+    cd "${TRAINING_FILES_DIR}" || true
+
+    if [ $type == "active" ]; then
+
+        remove_folders_active
+
+        if [ $level == 1 ]; then
+
+            python -m "active_vision_model_training.active_visual_model_training_lvl_1" 2>> "$ERROR_LOG"
+
+        elif [ $level == 2 ]; then
+
+            python -m "active_vision_model_training.active_visual_model_training_lvl_2" 2>> "$ERROR_LOG"
+
+        fi
+
+    elif [ $type == "baseline" ]; then
+
+        remove_folders_baseline
+
+        if [ $level == 1 ]; then
+
+            python -m "baseline_model_training.baseline_training_lvl_1" 2>> "$ERROR_LOG"
+
+        elif [ $level == 2 ]; then
+
+            python -m "baseline_model_training.baseline_training_lvl_2" 2>> "$ERROR_LOG"
+
+        fi
+
+
+    fi
+
+    cd "${SCRIPTS_TEST_DIR}" || true
+}
+
+#/data/model_performance_data/"
+#results/TEST_RUN.txt
+
+run_model() {
+
+    local model_type=$1
+
+    local model_file_active="Level 2/20_model_6850000.zip"
+    local model_path_active="${ACTIVE_TRAINED_MODELS_DIR}/${model_file_active}"
+
+    local model_file_baseline="Level 2/model_3720000.zip"
+    local model_path_baseline="${BASELINE_TRAINED_MODELS_DIR}/${model_file_baseline}"
+
+    local active_output="TEST_RUN_ACTIVE.txt"
+    local baseline_output="TEST_RUN_BASELINE.txt"
+
+    cd "${TRAINING_FILES_DIR}" || true
+
+    if [ ! -d "${SCRIPTS_TEST_DIR}/results" ]; then
+        mkdir -p "${SCRIPTS_TEST_DIR}/results" 
+    fi
+
+    if [ "$model_type" == "active" ]; then
+        python -m model_evaluation.run_model --in-model-path "${model_path_active}" --config-path 1 --verbose 'true' --active 'true' --reduction 20 --sleep 0.035 --episodes 4 2>> "$ERROR_LOG"
+    else
+        python -m model_evaluation.run_model --in-model-path "${model_path_baseline}" --config-path 1 --sleep 0.035 --episodes 4 2>> "$ERROR_LOG"
+    fi
+
+    cd "${SCRIPTS_TEST_DIR}" || true
+}
+
+
+print_success() {
+
+    local error_code=$1
+
+    if [ "$error_code" -eq 0 ]; then
+
+        printf "\n\nTest %d ran successfully! \n" "$total_tests"
+        (( tests_passed+=1 ))
+
+    else 
+        printf "\n\nTest %d FAILED! Error code: %s , See logs at the end for more details. \n" "$total_tests" "$error_code" 
+        problem_tests+=("$total_tests")
+
+    fi
+
+    (( total_tests+=1 ))
+}
 
 #TESTS
 
@@ -52,7 +164,7 @@ printf "       - https://github.com/BattmannWann/The-VizDoom-Experience#vizdoom-
 printf "       - https://github.com/BattmannWann/The-VizDoom-Experience/wiki \n\n"
 
 printf "For these tests to work, you MUST have activated your virtual environment and have installed all required dependencies.\n"
-printf "If you have not, then %s can both create the venv and download the dependencies if you require assistance. \n\n" "{$PROJ_DIR}/setup_project.sh"
+printf "If you have not, then %s can both create the venv and download the dependencies if you require assistance. \n\n" "${PROJ_DIR}/setup_project.sh"
 
 
 printf "\n=================\n\n" 
@@ -68,47 +180,88 @@ total_tests=0
 tests_passed=0
 problem_tests=()
 
-rm -r "${CACODEMON_SRC}/models_active/TEST/"
-rm -r "${CACODEMON_SRC}/logs_active/TEST/"
-
 # ==============================================
 
-printf "Running Test 1: Run active_visual_model_training_lvl_1.py \n\n"
+printf "\n\n === Test Suite 1: Training Models === \n\n"
+
 printf "Test Objectives: \n"
 printf "    - Window pops up \n"
 printf "    - Model can be seen interacting with the environment \n"
-printf "    - Model performance is logged successfully in logs_active/TEST/ \n"
-printf "    - Model weights are stored into models_active/TEST/ \n"
+printf "    - Model performance is logged successfully in logs_'model_type'/TEST/\n"
+printf "    - Model weights are stored into models_type/TEST/ \n\n"
 
+printf "(Where 'model_type(s)' in [active, baseline]) \n"
 sleep 2
 
-cd "${TRAINING_FILES_DIR}"
 
-python -m "active_vision_model_training.active_visual_model_training_lvl_1" 2>> error.log
+printf "\nRunning Test %d : Run active_visual_model_training_lvl_1.py \n\n" "${total_tests}"
 
-(( total_tests+=1 ))
+train_model "active" "1"
+print_success "$?"
 
-exec_status=$?
 
-if [ $exec_status -eq 0 ]; then
+printf "\nRunning Test %d : Run active_visual_model_training_lvl_2.py \n\n" "${total_tests}"
 
-    printf "\n\nTest ran successfully! \n"
-    (( tests_passed+=1 ))
+train_model "active" "2"
+print_success "$?"
 
-else 
-    printf "\n\nTest FAILED! Error code: %s , See logs at the end for more details. \n" "$exec_status"
-    problem_tests+=("$total_tests")
 
+printf "\nRunning Test %d : Run baseline_training_lvl_1.py \n\n" "${total_tests}"
+
+train_model "baseline" "1"
+print_success "$?"
+
+printf "\nRunning Test %d : Run baseline_training_lvl_2.py \n\n" "${total_tests}"
+
+train_model "baseline" "2"
+print_success "$?"
+
+
+printf "\n\n=== END OF TEST SUITE 1 === \n\n"
+
+
+printf "=== Test Suite 2: Model Evaluation (run_model.py) ==="
+
+printf "Test Objectives: \n\n"
+printf "    - Window pops up showing the scenario, enemies, and the agent's weapon \n"
+
+printf "    - Agent weights have been loaded in correctly, based on performance
+      (i.e. does the agent seek out and kill the Cacodemon?) \n\n"
+
+printf "    - Agent performance can be successfully saved and written to disk (into a file):
+       This file will be found in the test directory under 'results/TEST_RUN.txt' \n"
+
+
+printf "\nRunning Test %d : run_model.py on Baseline Model" "${total_tests}"
+run_model "baseline"
+print_success "$?"
+
+
+printf "\nRunning Test %d : run_model.py on Active Model" "${total_tests}"
+run_model "active"
+print_success "$?"
+
+printf "\n\n=== END OF TEST SUITE 2 === \n\n"
+
+
+#END OF TESTS
+printf "\n\n=== TESTING COMPLETED ===\n"
+
+percent_complete=$(( (tests_passed * 100) / total_tests ))
+printf "    Tests Passed: %s  Tests Run: %s, Percentage: %s %% \n\n" "${tests_passed}" "${total_tests}" "${percent_complete}"
+
+if [[ ${#problem_tests[@]} -gt 0 ]]; then
+
+    printf "\n\nSome tests were unsuccessful.\n"
+    # shellcheck disable=SC2145
+    echo "See problematic tests: ${problem_tests[@]}"
+
+    printf "And see the error log for more information: \n\n"
+    echo "TO EXIT, PRESS 'q' " >> "$ERROR_LOG"
+    less error.log
+    rm error.log
 fi
 
-cd "${PROJ_DIR}/src/tests/bash_scripts/"
-
-
-printf "Running Test 2"
-
-printf "\n\nTESTING COMPLETED\n"
-printf "    Tests Passed: %s  Tests Run: %s \n\n" "${tests_passed}" "{$total_tests}"
-
-printf "=========================================\n\n"
+printf "\n\n=========================================\n\n"
 
 

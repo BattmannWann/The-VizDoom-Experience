@@ -12,8 +12,13 @@ from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 
 sys.path.append("../envs")
 
-models_directory = "../models_baseline/CacodemonRecognition_2_7_836"
-logs_directory = "../logs"
+# #REGULAR DIRECTORIES
+# models_directory = "../models_baseline/CacodemonRecognition_2_7_836"
+# logs_directory = "../logs"
+
+#REGULAR DIRECTORIES
+models_directory = "../models_baseline/TEST/Level_2/"
+logs_directory = "../logs_baseline/TEST/Level_2/"
 
 if not os.path.exists(models_directory):
     os.makedirs(models_directory)
@@ -37,7 +42,12 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionEnv(config_path = 1, render = "rgb_array")
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_7_836.csv")) 
+
+    #TEST BASE
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_TEST_lvl_2.csv")) 
+
+    #REGULAR BASE
+    #base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_2_12.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -131,30 +141,17 @@ Recommended Value Ranges for all Hyperparameters:
  
 """
 
-#Final parameters of model 2_4.
-
-# learning_rate = 3e-4  #3e-4 #Adam optimiser default # 0.0001
-# steps = 2048
-# batch_size = 32 # or move to 128
-# epochs = 15
-# timesteps = 10000 #how often do we want the model to be saved? 
-# gamma = 0.99
-# gae_lambda = 0.92 ##
-# clip_range = 0.2
-# ent_coef = 0.01
-# vf_coef = 0.5
-# max_grad_norm = 0.5
-# target_kl = 0.03
-
-# training_repeats = 1000
-
-# lr_schedule = linear_lr_schedule(initial_value = 3e-5, final_value = 1e-5, warmup_ratio = 0.05)
-
 learning_rate = 3e-4
 steps = 2048
 batch_size = 256
 epochs = 10
-timesteps = 25000 #how often do we want the model to be saved? 
+
+# #REGULAR TIMESTEPS
+# timesteps = 25000 #how often do we want the model to be saved? 
+
+#TEST TIMESTEPS
+timesteps = 1000
+
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
@@ -163,12 +160,16 @@ vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
 
-training_repeats = 1000
+# #REGULAR REPEATS
+# training_repeats = 1000
+
+#TEST REPEATS
+training_repeats = 2
 
 lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
-env.seed(836)
+env.seed(123)
 
 env.reset()
 
@@ -213,30 +214,6 @@ Model Parameters:
 
 """
 
-# model = PPO.load(
-    
-#     path = "../models_baseline/Level 1/model_2450000.zip",
-#     env = env,
-#     seed = 123,
-#     verbose = 1,
-#     tensorboard_log = logs_directory,
-    
-#     custom_objects = {
-#         "learning_rate":lr_schedule,
-#         "n_steps": steps,
-#         "batch_size": batch_size,
-#         "gamma": gamma,
-#         "gae_lambda": gae_lambda,
-#         "clip_range": clip_range,
-#         "ent_coef": ent_coef,
-#         "vf_coef": vf_coef,
-#         "max_grad_norm": max_grad_norm,
-#         "target_kl": target_kl
-    
-#     }
-# )
-
-
 model = PPO(
     
     policy = "CnnPolicy",
@@ -253,7 +230,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 836,
+    seed = 123,
 )
 
 
@@ -275,7 +252,12 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_7_836")
+    # #REGULAR TENSORBOARD NAME
+    # model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_7_836")
+
+    #TEST TENSORBOARD NAME
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_TEST_lvl_2")
+
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

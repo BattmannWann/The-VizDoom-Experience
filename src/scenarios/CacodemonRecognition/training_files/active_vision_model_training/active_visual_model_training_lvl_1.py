@@ -11,8 +11,13 @@ from stable_baselines3.common.monitor import Monitor
 
 sys.path.append("../envs")
 
-models_directory = "../models_active/Cacodemon_Recognition_1_22_1_1"
-logs_directory = "../logs_active/Active_Vision"
+#TEST DIRECTORIES COMMENT THIS OUT FOR ACTUAL USE
+models_directory = "../models_active/TEST/Level_1"
+logs_directory = "../logs_active/TEST/Level_1"
+
+#NON-TEST DIRECTORIES
+# models_directory = "../models_active/Cacodemon_Recognition_"
+# logs_directory = "../logs_active/Cacodemon_Recognition_"
 
 if not os.path.exists(models_directory):
     os.makedirs(models_directory)
@@ -37,7 +42,11 @@ if not os.path.exists(logs_directory):
 def make_env():
     
     base = CacodemonRecognitionActiveEnv(config_path = 0, render = "rgb_array", reduction = 1)
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_1_22_1_1.csv")) 
+
+    #TEST ENV MONITOR FILE, REPLACE WITH THE BELOW FOR ACTUAL USE
+    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_TEST_lvl_1.csv")) 
+
+    #base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_Cacodemon_Recognition_.csv")) 
     
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
@@ -139,7 +148,13 @@ learning_rate = 3e-4
 steps = 1024
 batch_size = 56
 epochs = 5
-timesteps = 25000 #how often do we want the model to be saved? 
+
+#REGULAR TIMESTEPS
+#timesteps = 25000 #how often do we want the model to be saved? 
+
+#TEST TIMESTEPS
+timesteps = 1000
+
 gamma = 0.99
 gae_lambda = 0.95 ##
 clip_range = 0.2
@@ -148,13 +163,17 @@ vf_coef = 0.5
 max_grad_norm = 0.5
 target_kl = 0.03
 
-training_repeats = 1000
+#REGULAR REPEATS
+#training_repeats = 1000
+
+#TEST REPEATS
+training_repeats = 2
 
 lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 env = make_env()
 
-env.seed(1)
+env.seed(123)
 env.reset()
 
 
@@ -214,7 +233,7 @@ model = PPO(
     target_kl = target_kl,
     verbose = 1,
     tensorboard_log = logs_directory,
-    seed = 1,
+    seed = 123,
 )
 
 # training loop, model saves every `timesteps` and is trained `training_repeats` times...
@@ -230,7 +249,12 @@ for i in range(1, training_repeats):
     print(f"{'=' * 40}")
     print(f"Training iteration {i}:\n\n")
 
-    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_1_22_1_1")
+    #TEST tensorboard log name, comment this out and use the below for actual training
+    model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_TEST_lvl_1")
+    
+    #REGULAR TENSORBOARD NAME
+    #model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_")
+
     model.save(f"{models_directory}/model_{timesteps * i}")
     
 

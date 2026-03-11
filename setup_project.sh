@@ -128,6 +128,7 @@ done
 if [[ ${#problem_items[@]} -gt 0 ]]; then
 
     printf "\n\nFunction list contains an invalid option. Any valid functions were carried out, however.\n"
+    # shellcheck disable=SC2145
     echo "See problematic items: ${problem_items[@]}"
 fi
 
