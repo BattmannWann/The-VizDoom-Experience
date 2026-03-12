@@ -39,4 +39,4 @@ jobs:
     # 5. Run Pytest with Coverage
     - name: Run Tests and Generate Coverage
       run: |
-        python -m pytest
+        xvfb-run python -m pytest
