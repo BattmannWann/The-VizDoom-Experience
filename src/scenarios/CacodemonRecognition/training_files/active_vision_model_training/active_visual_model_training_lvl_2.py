@@ -8,6 +8,7 @@ from typing import Callable
 from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
 from stable_baselines3.common.vec_env import VecFrameStack, VecTransposeImage, DummyVecEnv
 from stable_baselines3.common.monitor import Monitor
+import argparse
 
 sys.path.append("../envs")
 
@@ -16,36 +17,19 @@ sys.path.append("../envs")
 models_directory = "../models_active/TEST/Level_2"
 logs_directory = "../logs_active/TEST/Level_2"
 
-#REGULAR DIRECTORIES
-
-# models_directory = "../models_active/Cacodemon_Recognition_2_27_1_1856"
-# logs_directory = "../logs_active/Active_Vision"
-
-if not os.path.exists(models_directory):
-    os.makedirs(models_directory)
-    
-else:
-    
-    contin = False
-    
-    while contin != True:
-        
-        print(f"There is already a directory with the name: {models_directory}")
-        contin = True if input("Do you still want to continue? [Y/N]: ").lower() == "y" else exit(0)
- 
-    
-if not os.path.exists(logs_directory):
-    os.makedirs(logs_directory)
-    
-    
 
 #Functions
 
-def make_env():
+def make_env(test = "false"):
     
     base = CacodemonRecognitionActiveEnv(config_path = 1, render = "rgb_array", reduction = 1)
-    base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_TEST_lvl_2.csv")) 
     
+    if test == "true":
+        base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_TEST_lvl_2.csv")) 
+        
+    else:
+        base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors", "env_monitor_.csv")) 
+        
     env = DummyVecEnv([lambda: base])
     env = VecTransposeImage(env)
     env = VecFrameStack(env, n_stack = 4)
@@ -86,95 +70,119 @@ def linear_lr_schedule(initial_value: float = 3e-4, final_value: float = 1e-6, w
     return schedule
     
     
-
-
-# Hyperparameters
-
-"""
-
-SB3 Default values:
-
-    self,
-    policy: str | type[ActorCriticPolicy],
-    env: GymEnv | str,
-    learning_rate: float | Schedule = 3e-4,
-    n_steps: int = 2048,
-    batch_size: int = 64,
-    n_epochs: int = 10,
-    gamma: float = 0.99,
-    gae_lambda: float = 0.95,
-    clip_range: float | Schedule = 0.2,
-    clip_range_vf: None | float | Schedule = None,
-    normalize_advantage: bool = True,
-    ent_coef: float = 0.0,
-    vf_coef: float = 0.5,
-    max_grad_norm: float = 0.5,
-    use_sde: bool = False,
-    sde_sample_freq: int = -1,
-    rollout_buffer_class: type[RolloutBuffer] | None = None,
-    rollout_buffer_kwargs: dict[str, Any] | None = None,
-    target_kl: float | None = None,
-    stats_window_size: int = 100,
-    tensorboard_log: str | None = None,
-    policy_kwargs: dict[str, Any] | None = None,
-    verbose: int = 0,
-    seed: int | None = None,
-    device: th.device | str = "auto",
-    _init_setup_model: bool = True,
-
-Recommended Value Ranges for all Hyperparameters:
+def main(test = "false"):
     
-    - Horizon range (n_steps): 32 - 5000
-    - Minibatch range: 4 - 4096
-    - Epoch range: 3 - 30
+    if test == "true":
+        
+        models_directory = "../models_active/TEST/Level_2"
+        logs_directory = "../logs_active/TEST/Level_2"
+        
+    else:
+        
+        models_directory = "../models_active/Cacodemon_Recognition_2_27_1_1856"
+        logs_directory = "../logs_active/Active_Vision"
     
-    - Clipping range: 0.1, 0.2, 0.3 
-    - KL Target range: 0.003 - 0.03
-    - KL Initiation range: 0.3 - 1 
-    - Discount Factor Gamma range: 0.99 (Most Common), or 0.8 - 0.9997
-    - GAE (Generalised Advantage Estimator) Lambda range: 0.9 to 1
+    contin = False
     
-    - Value Function Coefficient (c1) range: 0.5, 1
-    - Entropy Coefficient range (c2): 0 - 0.01
+    if not os.path.exists(models_directory):
+        os.makedirs(models_directory)
     
-    - Learning Rate range: 0.003 - 5e-6 
- 
-"""
+    else:
+        
+        while contin != True:
+            
+            print(f"There is already a directory with the name: {models_directory}")
+            contin = True if input("Do you still want to continue? [Y/N]: ").lower() == "y" else exit(0)
 
-learning_rate = 3e-4
-steps = 1024
-batch_size = 56
-epochs = 5
+    if not os.path.exists(logs_directory):
+        os.makedirs(logs_directory) 
 
-#REGULAR TIMESTEPS
-#timesteps = 25000 #how often do we want the model to be saved? 
-
-#TEST TIMESTEPS
-timesteps = 1000
-
-gamma = 0.99
-gae_lambda = 0.95 ##
-clip_range = 0.2
-ent_coef = 0.05
-vf_coef = 0.5
-max_grad_norm = 0.5
-target_kl = 0.03
-
-#REGULAR REPEATS
-#training_repeats = 1000
-
-#TEST REPEATS
-training_repeats = 2
-
-lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
-
-
-if __name__ == "__main__":
-
-    env = make_env()
+    env = make_env(test)
 
     env.seed(123)
     env.reset()
+    
+    # Hyperparameters
+
+    """
+
+    SB3 Default values:
+
+        self,
+        policy: str | type[ActorCriticPolicy],
+        env: GymEnv | str,
+        learning_rate: float | Schedule = 3e-4,
+        n_steps: int = 2048,
+        batch_size: int = 64,
+        n_epochs: int = 10,
+        gamma: float = 0.99,
+        gae_lambda: float = 0.95,
+        clip_range: float | Schedule = 0.2,
+        clip_range_vf: None | float | Schedule = None,
+        normalize_advantage: bool = True,
+        ent_coef: float = 0.0,
+        vf_coef: float = 0.5,
+        max_grad_norm: float = 0.5,
+        use_sde: bool = False,
+        sde_sample_freq: int = -1,
+        rollout_buffer_class: type[RolloutBuffer] | None = None,
+        rollout_buffer_kwargs: dict[str, Any] | None = None,
+        target_kl: float | None = None,
+        stats_window_size: int = 100,
+        tensorboard_log: str | None = None,
+        policy_kwargs: dict[str, Any] | None = None,
+        verbose: int = 0,
+        seed: int | None = None,
+        device: th.device | str = "auto",
+        _init_setup_model: bool = True,
+
+    Recommended Value Ranges for all Hyperparameters:
+        
+        - Horizon range (n_steps): 32 - 5000
+        - Minibatch range: 4 - 4096
+        - Epoch range: 3 - 30
+        
+        - Clipping range: 0.1, 0.2, 0.3 
+        - KL Target range: 0.003 - 0.03
+        - KL Initiation range: 0.3 - 1 
+        - Discount Factor Gamma range: 0.99 (Most Common), or 0.8 - 0.9997
+        - GAE (Generalised Advantage Estimator) Lambda range: 0.9 to 1
+        
+        - Value Function Coefficient (c1) range: 0.5, 1
+        - Entropy Coefficient range (c2): 0 - 0.01
+        
+        - Learning Rate range: 0.003 - 5e-6 
+    
+    """
+    
+    if test == "true":
+        
+        timesteps = 1000
+        training_repeats = 2
+        
+        tb_log_name = f"Cacodemon_Recognition_TEST_lvl_2"
+        
+    else:
+        
+        timesteps = 25000 #how often do we want the model to be saved?
+        training_repeats = 1000
+        
+        tb_log_name = f"Cacodemon_Recognition_2_27_1_1856"
+        
+        
+    learning_rate = 3e-4
+    steps = 1024
+    batch_size = 56
+    epochs = 5
+    gamma = 0.99
+    gae_lambda = 0.95 ##
+    clip_range = 0.2
+    ent_coef = 0.05
+    vf_coef = 0.5
+    max_grad_norm = 0.5
+    target_kl = 0.03
+
+    lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 
     """
@@ -249,11 +257,7 @@ if __name__ == "__main__":
         print(f"{'=' * 40}")
         print(f"Training iteration {i}:\n\n")
 
-        #REGULAR TENSORBOARD NAME
-        #model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_2_27_1_1856")
-
-        #TEST TENSORBOARD NAME
-        model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"Cacodemon_Recognition_TEST_lvl_2")
+        model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = tb_log_name)
         model.save(f"{models_directory}/model_{timesteps * i}")
         
 
@@ -262,3 +266,21 @@ if __name__ == "__main__":
     print(f"Training has completed. \nRan for: {training_repeats * timesteps} timesteps")
 
     env.close()
+
+    
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(description = """
+            \n\n
+            This file is for training active vision models on the Cacodemon Recognition scenario task level 2.
+            """,
+            
+            epilog = "Example: python -m active_vision_model_training.active_visual_model_training_lvl_2")
+    
+    
+    parser.add_argument("--test", type = str, required = False, default = "false")
+    
+    args = parser.parse_args()
+    test = args.test
+    
+    main(test)

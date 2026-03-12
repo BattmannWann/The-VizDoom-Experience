@@ -48,11 +48,11 @@ train_model() {
 
         if [ $level == 1 ]; then
 
-            python -m "active_vision_model_training.active_visual_model_training_lvl_1" 2>> "$ERROR_LOG"
+            python -m active_vision_model_training.active_visual_model_training_lvl_1 --test "true" 2>> "$ERROR_LOG"
 
         elif [ $level == 2 ]; then
 
-            python -m "active_vision_model_training.active_visual_model_training_lvl_2" 2>> "$ERROR_LOG"
+            python -m active_vision_model_training.active_visual_model_training_lvl_2 --test "true" 2>> "$ERROR_LOG"
 
         fi
 
@@ -62,11 +62,11 @@ train_model() {
 
         if [ $level == 1 ]; then
 
-            python -m "baseline_model_training.baseline_training_lvl_1" 2>> "$ERROR_LOG"
+            python -m baseline_model_training.baseline_training_lvl_1 --test "true" 2>> "$ERROR_LOG"
 
         elif [ $level == 2 ]; then
 
-            python -m "baseline_model_training.baseline_training_lvl_2" 2>> "$ERROR_LOG"
+            python -m baseline_model_training.baseline_training_lvl_2 --test "true" 2>> "$ERROR_LOG"
 
         fi
 

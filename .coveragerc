@@ -1,0 +1,9 @@
+[report]
+exclude_lines =
+    pragma: no cover
+    print\(
+    if self\.verbose
+    if verbose
+    except Exception
+    if __name__ == .__main__.:
+    if __name__ == "__main__":
