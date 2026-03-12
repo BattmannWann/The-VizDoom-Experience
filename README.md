@@ -1,3 +1,5 @@
+[![ViZDoom CI](https://github.com/BattmannWann/The-VizDoom-Experience/actions/workflows/ci.yml/badge.svg)](https://github.com/BattmannWann/The-VizDoom-Experience/actions/workflows/ci.yml)
+
 # ViZDoom Visual Learning Environment
 #### An Individual Project Completed by Rhys Stewart
 
