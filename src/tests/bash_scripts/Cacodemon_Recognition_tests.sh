@@ -174,9 +174,13 @@ printf "If you have not, then %s can both create the venv and download the depen
 
 printf "\n=================\n\n" 
 
-read -r -p "Would you like to continue? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
-printf "\n\n"
 
+
+if [[ ! "$1" == "-y" ]]; then
+    read -r -p "Would you like to continue? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
+fi
+
+printf "\n\n"
 printf "=== TESTS ===\n\n"
 
 #=== PRE-TEST SETUP ===

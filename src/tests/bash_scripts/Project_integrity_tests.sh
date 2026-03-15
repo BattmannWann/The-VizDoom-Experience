@@ -37,7 +37,10 @@ printf "    - Check that all required files (that aren't automatically generated
 
 printf "\n=================\n\n"
 
-read -r -p "Would you like to continue? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
+if [ ! "$1" == -y ]; then
+    read -r -p "Would you like to continue? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
+fi
+
 printf "\n\n"
 
 printf "==================================================================================\n"
