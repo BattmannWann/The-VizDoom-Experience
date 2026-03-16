@@ -34,8 +34,6 @@ class CacodemonRecognitionActiveEnv(gym.Env):
         self.reduction = reduction
         
         self.padded = padded
-        
-        self._seed = seed
         self.reward_scale = reward_scale_factor
         
         self.eval = evaluation
@@ -117,8 +115,11 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             dtype = np.uint8
         )
         
-        self.action_space.seed(None)
-        self.observation_space.seed(None)
+        if seed is not None:
+            
+            self.action_space.seed(seed)
+            self.observation_space.seed(seed)
+            self.game.set_seed(seed)
 
 
     def _get_crop_image(self, frame):
@@ -284,15 +285,17 @@ class CacodemonRecognitionActiveEnv(gym.Env):
             pass 
         
         elif self.render_mode == "rgb_array":
-            return self._get_obs()
+            
+            #Convert from BGR to RGB to render in correct colours
+            
+            frame = self._get_obs()
+            return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
     
     def reset(self, seed = None, options = None):
         
         if self.verbose == "true":
-            print(f"Seed: {seed}, self._seed: {self._seed}")
-        
-        self._seed = seed
+            print(f"Seed: {seed}")
         
         super().reset(seed = seed)
         

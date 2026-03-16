@@ -6,7 +6,7 @@ To understand what arguments must and can be passed using the command line, run 
 """
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTransposeImage
+from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTransposeImage, VecVideoRecorder
 from envs.Baseline_Cacodemon_recognition_env import CacodemonRecognitionEnv
 from envs.Active_Visual_Cacodemon_Recognition_env import CacodemonRecognitionActiveEnv
 from time import sleep
@@ -59,12 +59,14 @@ def make_env(base):
 
 def run(args):
     
+    render_mode = "rgb_array" if args.record.lower() == "true" else "human"
+    
     if args.active.lower() == "true":
     
         env = CacodemonRecognitionActiveEnv( 
         config_path = args.config_path,
-        render = "human",
-        #seed = 123,
+        render = render_mode,
+        seed = args.seed,
         verbose = args.verbose,
         reduction = args.reduction,
         padded = args.padded,
@@ -75,13 +77,31 @@ def run(args):
         
         env = CacodemonRecognitionEnv(
             config_path = args.config_path,
-            render = "human",
-            #seed = 123,
+            render = render_mode,
+            seed = args.seed,
             verbose = args.verbose,
             evaluation = "true"
         )
         
     env = make_env(env)
+    env.seed(args.seed)
+    
+    if args.record.lower() == "true":
+        
+        ROOT_DIR = get_proj_root()
+        video_folder = f"{ROOT_DIR}/data/videos/"
+        
+        # Determine a safe video length (e.g., max steps per episode * number of episodes)
+        video_length = 300 
+        
+        env = VecVideoRecorder(
+            env, 
+            video_folder = video_folder,
+            record_video_trigger = lambda x: x == 0, # Only record the very first episode (starting at step 0)
+            video_length = video_length,
+            name_prefix = args.output if args.output.lower() != "false" else "evaluation_video"
+        )
+    
     model = PPO.load(args.in_model_path)
     
     
@@ -240,6 +260,11 @@ if __name__ == "__main__":
                          """)
     
     parser.add_argument("--padded", type = str, required = False, default = "false", help = "set the active vision mode; padding = black square padding around reduced image, --active MUST be 'true'")
+    
+    
+    parser.add_argument("--seed", type = int, required = False, default = 42, help = "This will set the seed for the environment and model. Default: 42")
+    
+    parser.add_argument("--record", type = str, required = False, default = "false", help = "Set to 'true' to save an MP4 video of the agent's first evaluation episode.")
     
     args = parser.parse_args()
     run(args)

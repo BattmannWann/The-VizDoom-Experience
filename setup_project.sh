@@ -93,7 +93,7 @@ printf "    3. Create a virtual environment for you and download all required de
 printf "\n\n============================\n\n"
 
 
-read -p "Would you like to continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || return 0
+read -p "Would you like to continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 0
 printf "\n\n"
 read -p "Please enter the functionalities that you would like carried out, in a comma separated list or enter ALL for every functionality: [e.g. 1,3]: " function_list
 printf "\n\n"

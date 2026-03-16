@@ -3,6 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import vizdoom as vzd
 from time import sleep
+import cv2
 import os
 
 class CacodemonRecognitionEnv(gym.Env):
@@ -26,12 +27,9 @@ class CacodemonRecognitionEnv(gym.Env):
         super().__init__()
         
         self.render_mode = render
-        
         self.verbose = verbose.lower()
         
-        self._seed = seed
         self.reward_scale = reward_scale_factor
-        
         self.eval = evaluation
         
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -78,8 +76,11 @@ class CacodemonRecognitionEnv(gym.Env):
             dtype = np.uint8
         )
         
-        self.action_space.seed(None)
-        self.observation_space.seed(None)
+        if seed is not None:
+            
+            self.action_space.seed(seed)
+            self.observation_space.seed(seed)
+            self.game.set_seed(seed)
         
         
     def _get_obs(self):
@@ -109,7 +110,7 @@ class CacodemonRecognitionEnv(gym.Env):
         
         for lab in state.labels:
             
-            if lab.object_name.lower() in ["cacodemon"]: #, "cyberdemon", "lostsoul", "painelemental", "zombieman"]:
+            if lab.object_name.lower() in ["cacodemon"]: 
                 
                 cx = lab.x + lab.width / 2
                 cy = lab.y + lab.height / 2
@@ -167,15 +168,17 @@ class CacodemonRecognitionEnv(gym.Env):
             pass 
         
         elif self.render_mode == "rgb_array":
-            return self._get_obs()
+            
+            #Convert from BGR to RGB to render in correct colours
+            
+            frame = self._get_obs()
+            return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     
     
     def reset(self, seed = None, options = None):
         
         if self.verbose == "true":
-            print(f"Seed: {seed}, self._seed: {self._seed}")
-        
-        seed = self._seed
+            print(f"Seed: {seed}")
         
         super().reset(seed = seed)
         

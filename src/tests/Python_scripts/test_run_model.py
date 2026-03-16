@@ -23,7 +23,9 @@ def default_args():
         verbose="false",
         output="false",
         reduction=0,
-        padded="false"
+        padded="false",
+        record="false",
+        seed = 42
     )
 
 # --- TESTS ---
@@ -271,3 +273,43 @@ def test_run_model_make_env(mock_dummy, mock_transpose, mock_stack):
     
     # Did it return the final environment in the chain?
     assert result == "final_stacked_env"
+    
+    
+# --- TEST VIDEO RECORDING ---
+
+@patch('builtins.open', new_callable=mock_open) 
+@patch('model_evaluation.run_model.VecVideoRecorder')
+@patch('model_evaluation.run_model.CacodemonRecognitionEnv')
+@patch('model_evaluation.run_model.PPO.load')
+@patch('model_evaluation.run_model.make_env')
+@patch('model_evaluation.run_model.get_proj_root')
+def test_run_model_with_video_recording(mock_root, mock_make_env, mock_ppo_load, mock_baseline_env, mock_video_recorder, mock_file_open, default_args): 
+    
+    """Test that the evaluation script wraps the environment in VecVideoRecorder when --record is true."""
+    
+    # 1. Turn on recording
+    default_args.record = "true"
+    default_args.output = "test_video_output"
+    
+    fake_model = MagicMock()
+    fake_model.predict.return_value = ([0], None)
+    mock_ppo_load.return_value = fake_model
+    
+    fake_vec_env = MagicMock()
+    fake_vec_env.step.return_value = (None, [1.0], [True], [{"reward": 42.0}])
+    mock_make_env.return_value = fake_vec_env
+    
+    # Tell the mocked VecVideoRecorder to return the fake environment
+    mock_video_recorder.return_value = fake_vec_env 
+    
+    mock_root.return_value = Path("/fake_root_dir")
+    
+    # 2. Run the script
+    run(default_args)
+    
+    # 3. Assertions
+    mock_video_recorder.assert_called_once()
+    
+    _, kwargs = mock_video_recorder.call_args
+    assert "data/videos/" in str(kwargs.get("video_folder"))
+    assert kwargs.get("name_prefix") == "test_video_output"

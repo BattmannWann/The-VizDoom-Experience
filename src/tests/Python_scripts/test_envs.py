@@ -76,6 +76,27 @@ def test_baseline_env_reset_and_step(baseline_env):
     
     assert isinstance(truncated, bool)
     assert isinstance(step_info, dict)
+    
+    
+def test_env_render_rgb_array_baseline():
+    
+    """Test that the render method correctly returns a numpy array when in rgb_array mode."""
+    
+    env = CacodemonRecognitionEnv(config_path=0, render="rgb_array", verbose="false")
+    env.reset()
+    
+    frame = env.render()
+    
+    # 1. Assert it returns an array
+    assert isinstance(frame, np.ndarray)
+    
+    # 2. Assert the shape matches the observation space (Height, Width, Channels)
+    assert frame.shape == env.observation_space.shape
+    
+    # 3. Assert the data type is correct for image pixels
+    assert frame.dtype == np.uint8
+    
+    env.close()
 
 
 # --- ACTIVE ENVIRONMENT TESTS ---
@@ -218,3 +239,24 @@ def test_multiple_cacodemon_alignment_reward(env_name, request):
     
     reward = env._get_cacodemon_alignment_reward()
     assert reward == 1.0
+    
+    
+def test_env_render_rgb_array_active():
+    
+    """Test that the render method correctly returns a numpy array when in rgb_array mode."""
+    
+    env = CacodemonRecognitionActiveEnv(config_path=0, render="rgb_array", verbose="false")
+    env.reset()
+    
+    frame = env.render()
+    
+    # 1. Assert it returns an array
+    assert isinstance(frame, np.ndarray)
+    
+    # 2. Assert the shape matches the observation space (Height, Width, Channels)
+    assert frame.shape == env.observation_space.shape
+    
+    # 3. Assert the data type is correct for image pixels
+    assert frame.dtype == np.uint8
+    
+    env.close()

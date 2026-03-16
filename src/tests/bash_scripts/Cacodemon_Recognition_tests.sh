@@ -15,6 +15,9 @@ BASELINE_TRAINED_MODELS_DIR="${PROJ_DIR}/data/trained_models/Cacodemon_Recogniti
 ERROR_LOG="${PROJ_DIR}/src/tests/bash_scripts/error.log"
 SCRIPTS_TEST_DIR="${PROJ_DIR}/src/tests/bash_scripts"
 
+PARENT_DIR=$(dirname "$PROJ_DIR")
+VENV_PYTHON="${PARENT_DIR}/venv/bin/python"
+
 
 #FUNCTIONS
 remove_folders_active() {
