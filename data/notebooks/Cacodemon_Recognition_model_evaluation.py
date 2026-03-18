@@ -334,7 +334,7 @@ def generate_plots(df, save_dir):
     # Configure it to use the Mann-Whitney test and format the text as stars
     annotator.configure(test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
     
-    # Draw the brackets!
+    # Draw the brackets
     annotator.apply_and_annotate()
 
     plt.tight_layout()

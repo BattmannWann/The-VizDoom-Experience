@@ -176,7 +176,7 @@ What this does:
 
 <br><br>
 
-Assuming you have downloaded the following [folders](), here are some evaluation commands for each type and each level within each type of model, for convenience:
+Assuming you have downloaded the following [folders]("https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0"), here are some evaluation commands for each type and each level within each type of model, for convenience:
 
 ## Active Models
 

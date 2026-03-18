@@ -11,11 +11,11 @@ This file has been included such that decisions/tunings can be tracked and a rec
 
 - **Python Files**: *These detail the hyperparameter settings and any other relevant variables*
 
-- **Configuration Files**: *A note of what config file was used (using indicies)*: See the baseline environment file's `scenario_configs` list for more info
+- **Configuration Files**: *A note of what config file was used (using indices)*: See the baseline environment file's `scenario_configs` list for more info
 
 - **Maths for Working out Reward Structures**:
 
-    - Timeout = `episode_timout` * `living_penalty` (e.g. 1200 * -0.01 = -12)
+    - Timeout = `episode_timeout` * `living_penalty` (e.g. 1200 * -0.01 = -12)
 
     - Shooting = `%chance of hitting an enemy` * `reward` (e.g. 1 (+10) cacodemon and 3 (-3 per enemy) non-cacodemon = 25:75 split, = (0.25 * 10) + (0.75 * -3) = 2.5 + -2.25  = +0.25)
 

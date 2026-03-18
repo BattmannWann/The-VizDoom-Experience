@@ -1641,7 +1641,7 @@ self.width_crop, self.height_crop,  = 8, 6
 
 ## Cacodemon_Recognition_2_7_1
 
-**Successful?**: 
+**Successful?**: No
 
 **Python File**: active_visual_model_training_lvl_2_.py
 
@@ -3169,21 +3169,158 @@ if action in [5, 6]:
 
 ## Cacodemon_Recognition_2_27_1_2564
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_27_1_2141
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ## Cacodemon_Recognition_2_27_1_1856
 
-**Successful?**:
+**Successful?**: Yes
 
 ---
 
 ---
 
+
+## CATASTROPHIC FORGETTING EXAMPLES:
+
+---
+
+- 2_5_10:
+
+```python
+
+learning_rate = 3e-4
+steps = 1024
+batch_size = 128
+epochs = 10
+timesteps = 25000 #how often do we want the model to be saved? 
+gamma = 0.99
+gae_lambda = 0.95 ##
+clip_range = 0.2
+ent_coef = 0.05
+vf_coef = 0.5
+max_grad_norm = 0.5
+target_kl = 0.03
+
+training_repeats = 1000
+
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
+
+```
+
+**ACS Script**: No, can identify the Cacodemon but won't kill it. Entropy coefficient was adjusted, will need to now consider reward differences. Perhaps bullet penalty alongside the living and wrong enemy reward is too harsh. Will try reducing the bullet penalty
+
+- **Cacodemon Kill Reward**: +10
+- **Other Enemy Kill Reward**: None
+
+- **Living Reward**: -100 / 1000 = 0.1
+- **Bullets Shot Reward**: None
+
+---
+
+- 2_12_10:
+
+```python
+
+learning_rate = 3e-4
+steps = 2048
+batch_size = 256
+epochs = 10
+timesteps = 25000 #how often do we want the model to be saved? 
+gamma = 0.99
+gae_lambda = 0.95 ##
+clip_range = 0.2
+ent_coef = 0.01
+vf_coef = 0.5
+max_grad_norm = 0.5
+target_kl = 0.03
+
+training_repeats = 1000
+
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
+
+```
+
+**ACS Script**:
+
+- **Cacodemon Kill Reward**: +10
+- **Other Enemy Kill Reward**: -20
+
+- **Living Reward**: -10 / 1000 = 0.01
+- **Bullets Shot Reward**: -10 / 1000 = 0.01
+
+---
+
+- 2_4_20:
+
+```python
+learning_rate = 3e-4
+steps = 2048
+batch_size = 256
+epochs = 10
+timesteps = 25000 #how often do we want the model to be saved? 
+gamma = 0.99
+gae_lambda = 0.95 ##
+clip_range = 0.2
+ent_coef = 0.01
+vf_coef = 0.5
+max_grad_norm = 0.5
+target_kl = 0.03
+
+training_repeats = 1000
+
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
+```
+
+**ACS Script**:
+
+- **Cacodemon Kill Reward**: +10
+- **Other Enemy Kill Reward**: None
+
+- **Living Reward**: -100 / 1000 = 0.1
+- **Bullets Shot Reward**: None
+
+
+---
+
+- 2_7_1:
+
+```python
+learning_rate = 3e-4
+steps = 1024
+batch_size = 56
+epochs = 5
+timesteps = 25000 #how often do we want the model to be saved? 
+gamma = 0.99
+gae_lambda = 0.95 ##
+clip_range = 0.2
+ent_coef = 0.05
+vf_coef = 0.5
+max_grad_norm = 0.5
+target_kl = 0.03
+
+training_repeats = 1000
+
+lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
+```
+
+**ACS Script**:
+
+- **Cacodemon Kill Reward**: +10
+- **Other Enemy Kill Reward**: None
+
+- **Living Reward**: -100 / 1000 = 0.1
+- **Bullets Shot Reward**: None
+
+---
+
+- 
+
+---

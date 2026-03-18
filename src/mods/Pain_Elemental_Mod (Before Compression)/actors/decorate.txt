@@ -1,0 +1,12 @@
+actor NoSoulPainElemental : PainElemental replaces PainElemental
+{
+    States
+    {
+    Death:
+        PELE A 8
+        PELE B 8
+        PELE C 8
+        PELE D 8
+        Stop
+    }
+}
