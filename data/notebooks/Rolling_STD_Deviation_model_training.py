@@ -3,7 +3,18 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import numpy as np
 
-def generate_large_learning_curve(csv_filepath, window_size=10000, learned_threshold=0, max_plot_points=5000):
+
+def get_proj_root():
+    curr_path = Path(__file__).resolve()
+    
+    for parent in [curr_path] + list(curr_path.parents):
+        if (parent / ".git").exists() or (parent / "requirements.txt").exists():
+            return parent
+        
+    raise FileNotFoundError("could not locate project root directory")
+
+
+def generate_large_learning_curve(csv_filepath, window_size=10000, learned_threshold=0, max_plot_points=5000, save_dir = ""):
     """
     Optimized to graph massive RL Monitor logs (1M+ rows) without crashing.
     Uses rolling means and shaded standard deviation bands.
@@ -64,7 +75,7 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
         x_offset = (plot_df['Step'].max() - plot_df['Step'].min()) * 0.02 
         y_pos = plot_df['Rolling_Mean'].min() + (plot_df['Rolling_Mean'].max() - plot_df['Rolling_Mean'].min()) * 0.15 
         
-        plt.text(learned_step + x_offset, y_pos, 'Stable Learning\nAchieved', 
+        plt.text(learned_step + x_offset, y_pos, f'Stable Learning\nAchieved ({learned_threshold} Reward)', 
                  color='red', fontsize=12, weight='bold')
         print(f"Model successfully reached threshold ({learned_threshold}) at step: {int(learned_step):,}")
     else:
@@ -81,7 +92,7 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
     plt.tight_layout()
 
     # Save output
-    output_filename = csv_path.parent / f"{csv_path.stem}_optimized_curve.png"
+    output_filename = save_dir / f"{csv_path.stem}_optimized_curve.png"
     plt.savefig(output_filename, dpi=300)
     plt.show()
     
@@ -91,13 +102,17 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
 if __name__ == "__main__":
     
     TARGET_CSV = "./env_monitor_1_24_100.csv.monitor.csv" 
+
+    proj_root = get_proj_root()
+    data_dir = proj_root / "data" / "Graphs" / "Training_Graphs"
     
     try:
         generate_large_learning_curve(
             csv_filepath=TARGET_CSV, 
             window_size=10000,       
-            learned_threshold=0,     
-            max_plot_points=5000     
+            learned_threshold=10,     
+            max_plot_points=5000,
+            save_dir = data_dir     
         )
     except Exception as e:
         print(f"Error: {e}")
