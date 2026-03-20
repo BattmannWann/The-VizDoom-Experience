@@ -1569,3 +1569,11 @@ model = PPO(
 
 - **Living Reward**: -100 / 1000 = 0.1
 - **Bullets Shot Reward**: None
+
+
+---
+
+## SUCCESSFUL MODELS OF INTEREST (that were used)
+
+- **Level 1**: 1_3 - `model_2450000.zip`
+- **Level 2**: 2_7 - `model_3720000.zip`

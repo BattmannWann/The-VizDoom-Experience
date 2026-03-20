@@ -8,6 +8,7 @@ def generate_learning_curve(csv_filepath, window_size=50, learned_threshold=0):
     Expects columns: 'r' (reward), 'l' (length), 't' (time).
     """
     csv_path = Path(csv_filepath)
+    
     if not csv_path.exists():
         raise FileNotFoundError(f"Could not find the CSV file: {csv_filepath}")
         
@@ -35,7 +36,7 @@ def generate_learning_curve(csv_filepath, window_size=50, learned_threshold=0):
     plt.plot(df['Step'], df['Rolling_Avg'], color='blue', linewidth=2, label=f'{window_size}-Episode Rolling Average')
 
     # Find when the model "learned"
-    learned_df = df[df['Rolling_Avg'] > learned_threshold]
+    learned_df = df[df['Rolling_Avg'] >= learned_threshold]
     
     if not learned_df.empty:
         learned_step = learned_df['Step'].min()
@@ -50,13 +51,16 @@ def generate_learning_curve(csv_filepath, window_size=50, learned_threshold=0):
         
         plt.text(learned_step + x_offset, y_pos, 'Stable Learning\nAchieved', 
                  color='red', fontsize=12, weight='bold')
+        
         print(f"Model reached threshold ({learned_threshold}) at step: {int(learned_step):,}")
+        
     else:
         print(f"Notice: Model never reached the learning threshold of {learned_threshold} in this dataset.")
 
     # Formatting
     plt.title(f'Agent Learning Curve: {csv_path.stem}', fontsize=16, fontweight='bold')
     plt.xlabel('Total Training Steps', fontsize=12)
+    
     plt.ylabel('Episode Reward', fontsize=12)
     plt.grid(True, linestyle='--', alpha=0.6)
     
@@ -82,8 +86,8 @@ if __name__ == "__main__":
     try:
         generate_learning_curve(
             csv_filepath=TARGET_CSV, 
-            window_size=10000,          # E.g., smoothed over the last 10 episodes
-            learned_threshold=10      # Set the score you consider "learned" here
+            window_size=10000,          
+            learned_threshold=10    
         )
     except Exception as e:
         print(f"Error: {e}")

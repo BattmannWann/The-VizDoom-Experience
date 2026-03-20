@@ -2,7 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 import numpy as np
+import os
+import matplotlib.cm as cm
 
+
+#FUNCTIONS
 
 def get_proj_root():
     curr_path = Path(__file__).resolve()
@@ -14,14 +18,59 @@ def get_proj_root():
     raise FileNotFoundError("could not locate project root directory")
 
 
-def generate_large_learning_curve(csv_filepath, window_size=10000, learned_threshold=0, max_plot_points=5000, save_dir = ""):
+def get_csv_monitor_files(dir_path):
+    
+    files_list = []
+    
+    for filepath in dir_path.rglob('*'):
+        
+        if ".csv.monitor.csv" in str(filepath):
+           files_list.append(str(filepath))
+           
+    
+    if "active" in str(dir_path):
+            
+        assert len(files_list) == 16, f"""ERROR, make sure that you have downloaded the trained_models dir successfully. 
+        Some csv files are missing: should be {16}, have {len(files_list)}"""
+        
+    else:
+        
+        assert len(files_list) == 2, f"""ERROR,  make sure that you have downloaded the trained_models dir successfully.
+        Some csv files are missing: should be {2}, have {len(files_list)}"""
+        
+    return files_list
+
+
+def get_graphs(file_list, model_type = "baseline"):
+    
+    for file in file_list:
+        
+        try:
+            generate_large_learning_curve(
+                csv_filepath=file, 
+                window_size=10000,       
+                learned_thresholds=[-5, -1, 0, 5, 10],     
+                max_plot_points=5000,
+                save_dir = graph_dir / f"{model_type}_models"    
+            )
+        
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thresholds=[-5, 0, 5, 10], max_plot_points=5000, save_dir = ""):
     """
     Optimized to graph massive RL Monitor logs (1M+ rows) without crashing.
     Uses rolling means and shaded standard deviation bands.
     """
     csv_path = Path(csv_filepath)
+    
+    colours = [cm.plasma(x) for x in np.linspace(0, 1, len(learned_thresholds))]
+    
     if not csv_path.exists():
         raise FileNotFoundError(f"Could not find the CSV file: {csv_filepath}")
+    
+    print(f'\n\n{"=" * 20}\n')
         
     print(f"Loading {csv_path.name} (This might take a few seconds for 1M+ rows)...")
     
@@ -36,12 +85,12 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
     df['Step'] = df['l'].cumsum()
     
     # 1. Calculate Rolling Mean and Standard Deviation on the FULL dataset
-    # Because your data is huge, we need a large window (e.g., 10,000 episodes) to get a smooth line
+    # Because data is huge, need a large window (e.g., 10,000 episodes) to get a smooth line
     df['Rolling_Mean'] = df['r'].rolling(window=window_size, min_periods=1).mean()
     df['Rolling_Std'] = df['r'].rolling(window=window_size, min_periods=1).std().fillna(0)
 
     # 2. Downsample for Plotting
-    # Matplotlib will choke on 1.3M points. We reduce it to a safe number (e.g., 5000 points)
+    # Matplotlib will choke on 1.3M points. FIX: reduce it to a safe number (e.g., 5000 points)
     # This does NOT change the math, it only skips drawing redundant pixels.
     step_size = max(1, len(df) // max_plot_points)
     plot_df = df.iloc[::step_size].copy()
@@ -62,28 +111,52 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
         color='blue', linewidth=2, label=f'{window_size:,}-Episode Rolling Mean'
     )
 
-    # 5. Find when the model "learned"
-    learned_df = df[df['Rolling_Mean'] > learned_threshold]
+    # 5. Iterate through the pairs
+    for i, (thresh, col) in enumerate(zip(learned_thresholds, colours)):
     
-    if not learned_df.empty:
-        learned_step = learned_df['Step'].min()
+        # Filter using the rolling mean
+        learned_df = df[df['Rolling_Mean'] >= thresh]
         
-        plt.axvline(x=learned_step, color='red', linestyle='--', linewidth=2, 
-                    label=f'Model Learned (Step ~{int(learned_step):,})')
+        if not learned_df.empty:
+            learned_step = learned_df['Step'].min()
+            
+            # Draw the vertical line
+            plt.axvline(x=learned_step, color=col, linestyle='--', linewidth=2, 
+                        label=f'Model Learned >= {thresh} (Step ~{int(learned_step):,})')
+            
+            # Dynamic text placement using your plot_df logic
+            x_offset = (plot_df['Step'].max() - plot_df['Step'].min()) * 0.02 
+            
+            # Multiply by (0.15 + i*0.1) so the labels stack and don't overlap
+            y_pos = plot_df['Rolling_Mean'].min() + (plot_df['Rolling_Mean'].max() - plot_df['Rolling_Mean'].min()) * (0.15 + (i * 0.1)) 
+            
+            
+            print(f"Model successfully reached threshold ({thresh}) at step: {int(learned_step):,}")
+            
+        else:
         
-        # Dynamic text placement
-        x_offset = (plot_df['Step'].max() - plot_df['Step'].min()) * 0.02 
-        y_pos = plot_df['Rolling_Mean'].min() + (plot_df['Rolling_Mean'].max() - plot_df['Rolling_Mean'].min()) * 0.15 
-        
-        plt.text(learned_step + x_offset, y_pos, f'Stable Learning\nAchieved ({learned_threshold} Reward)', 
-                 color='red', fontsize=12, weight='bold')
-        print(f"Model successfully reached threshold ({learned_threshold}) at step: {int(learned_step):,}")
-    else:
-        print(f"Notice: Model never reached the learning threshold of {learned_threshold}.")
+            # 1. Find the actual highest rolling mean achieved
+            actual_max = df['Rolling_Mean'].max()
+            
+            # # 2. Draw a horizontal dotted line at that peak
+            # plt.axvline(x=actual_max, color=col, linestyle=':', linewidth=2, alpha=0.7,
+            #             label=f'Peak: {actual_max:.2f} (Missed {thresh})')
+            
+            
+            print(f"Notice: Model never reached threshold {thresh}. Plotted peak line at {actual_max:.2f}.")
+
+
+    # Call this after the loop so all threshold lines appear in the legend
+    plt.legend(loc='best')
+            
+
+    # 6. Call legend after the loop to show all labels
+    plt.legend(loc='best', fontsize='small')
 
     # 6. Formatting
     plt.title(f'Agent Learning Curve: {csv_path.stem}', fontsize=16, fontweight='bold')
     plt.xlabel('Total Training Steps', fontsize=12)
+    
     plt.ylabel('Episode Reward', fontsize=12)
     plt.grid(True, linestyle='--', alpha=0.6)
     
@@ -97,22 +170,36 @@ def generate_large_learning_curve(csv_filepath, window_size=10000, learned_thres
     plt.show()
     
     print(f"Graph rendered and saved to: {output_filename}")
+    
+    print(f'\n\n{"=" * 20}\n')
 
 
 if __name__ == "__main__":
-    
-    TARGET_CSV = "./env_monitor_1_24_100.csv.monitor.csv" 
 
     proj_root = get_proj_root()
-    data_dir = proj_root / "data" / "Graphs" / "Training_Graphs"
+    data_dir = proj_root / "data" 
     
-    try:
-        generate_large_learning_curve(
-            csv_filepath=TARGET_CSV, 
-            window_size=10000,       
-            learned_threshold=10,     
-            max_plot_points=5000,
-            save_dir = data_dir     
-        )
-    except Exception as e:
-        print(f"Error: {e}")
+    graph_dir = data_dir / "Graphs" / "Training_Graphs"
+    active_models_dir = data_dir / "trained_models/Cacodemon_Recognition_active_vision_models"
+    baseline_model_dir = data_dir / "trained_models/Cacodemon_Recognition_baseline_models"
+    
+    active_path = Path(active_models_dir)
+    baseline_path = Path(baseline_model_dir)
+    
+    active_files_for_graphing = get_csv_monitor_files(active_path)
+    baseline_files_for_graphing = get_csv_monitor_files(baseline_path)
+    
+    
+    if not os.path.exists(f"{graph_dir}/active_models"):
+        os.makedirs(f"{graph_dir}/active_models")
+    
+    
+    if not os.path.exists(f"{graph_dir}/baseline_models"):
+        os.makedirs(f"{graph_dir}/baseline_models")
+    
+    
+    get_graphs(active_files_for_graphing, "active")
+    get_graphs(baseline_files_for_graphing, "baseline")
+    
+    
+    

@@ -3321,6 +3321,28 @@ lr_schedule = linear_lr_schedule(initial_value = 3e-4, final_value = 1e-5)
 
 ---
 
-- 
+## SUCCESSFUL MODELS LIST
+
+### Level 1
+
+- 1_24_100: `model_1275000.zip`
+- 1_16_80:  `model_1575000.zip`
+- 1_23_60:  `model_1950000.zip`
+- 1_18_40:  `model_3025000.zip`
+- 1_19_20:  `model_1975000.zip`
+- 1_20_10:  `model_1000000.zip`
+- 1_21_5:   `model_2100000.zip`
+- 1_22_1:   `model_2100000.zip` 
 
 ---
+
+### Level 2
+
+- 2_26_100: `model_4700000.zip`
+- 2_19_80:  `model_6350000.zip`
+- 2_20_60:  `model_6475000.zip`
+- 2_21_40:  `model_3000000.zip`
+- 2_22_20:  `model_6850000.zip`
+- 2_23_10:  `model_2650000.zip`
+- 2_24_5:   `model_2800000.zip`
+- 2_27_1:   `model_4775000.zip`
