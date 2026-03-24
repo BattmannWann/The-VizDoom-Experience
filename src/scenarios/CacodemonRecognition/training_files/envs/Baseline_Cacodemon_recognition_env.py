@@ -172,7 +172,7 @@ class CacodemonRecognitionEnv(gym.Env):
             #Convert from BGR to RGB to render in correct colours
             
             frame = self._get_obs()
-            return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            return frame
     
     
     def reset(self, seed = None, options = None):

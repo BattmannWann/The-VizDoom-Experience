@@ -14,6 +14,7 @@ from pprint import pformat
 import os
 import argparse
 from pathlib import Path
+import re
 
 
 def write_to_file(file_path, write_mode, content):
@@ -60,6 +61,7 @@ def make_env(base):
 def run(args):
     
     render_mode = "rgb_array" if args.record.lower() == "true" else "human"
+    evaluation = "true"
     
     if args.active.lower() == "true":
     
@@ -70,7 +72,7 @@ def run(args):
         verbose = args.verbose,
         reduction = args.reduction,
         padded = args.padded,
-        evaluation = "true"
+        evaluation = evaluation
         ) 
         
     else:
@@ -80,7 +82,7 @@ def run(args):
             render = render_mode,
             seed = args.seed,
             verbose = args.verbose,
-            evaluation = "true"
+            evaluation = evaluation
         )
         
     env = make_env(env)
@@ -92,14 +94,24 @@ def run(args):
         video_folder = f"{ROOT_DIR}/data/videos/"
         
         # Determine a safe video length (e.g., max steps per episode * number of episodes)
-        video_length = 300 
+        video_length = 1000 
+        
+        match = re.search(r'Level (\d+)', args.in_model_path)
+
+        if match:
+            level_number = match.group(1) 
+            name_prefix = f"active_reduction_{args.reduction}_lvl_{level_number}_on_lvl_{int(args.config_path) + 1}" if args.active == "true" else f"baseline_lvl_{level_number}_on_lvl_{int(args.config_path) + 1}"
+        
+
+        else:
+            name_prefix = "test_video_output"
         
         env = VecVideoRecorder(
             env, 
             video_folder = video_folder,
             record_video_trigger = lambda x: x == 0, # Only record the very first episode (starting at step 0)
             video_length = video_length,
-            name_prefix = args.output if args.output.lower() != "false" else "evaluation_video"
+            name_prefix = name_prefix
         )
     
     model = PPO.load(args.in_model_path)

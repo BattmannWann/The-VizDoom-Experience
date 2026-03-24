@@ -23,7 +23,7 @@ download_and_handle_models() {
         printf "\n Directory for trained models already exists (data/trained_models/). \n Ensure that you have not already downloaded the models.\n "
         printf "If in doubt, delete the trained_models/ directory and try again.\n\n"
 
-        read -p -r "Would you like to do this now? [y/n]: " confirm 
+        read -p "Would you like to do this now? [y/n]: " confirm 
 
         if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
 
@@ -36,6 +36,8 @@ download_and_handle_models() {
 
     fi
 
+    #"https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0?download=1"
+    
     wget -a error.log --show-progress -O all_trained_models.zip "https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0?download=1"
     mv all_trained_models.zip "${PROJ_DIR}/data/" 2>> error.log
 
@@ -149,9 +151,7 @@ if [ -f error.log ]; then
 
     printf "For any issues/errors, see the following:\n\n"
 
-    echo "TO QUIT, PRESS q" >> "$ERROR_LOG"
-
-    less "$ERROR_LOG"
+    cat "$ERROR_LOG"
     rm "$ERROR_LOG"
 
 fi

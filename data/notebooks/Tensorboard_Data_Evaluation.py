@@ -2,6 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
+def get_proj_root():
+    curr_path = Path(__file__).resolve()
+    
+    for parent in [curr_path] + list(curr_path.parents):
+        if (parent / ".git").exists() or (parent / "requirements.txt").exists():
+            return parent
+        
+    raise FileNotFoundError("could not locate project root directory")
+
+
 def generate_learning_curve(csv_filepath, window_size=50, learned_threshold=0):
     """
     Generates a learning curve graph from a Gym Monitor CSV format.
@@ -79,15 +90,16 @@ def generate_learning_curve(csv_filepath, window_size=50, learned_threshold=0):
 
 
 if __name__ == "__main__":
+
+    proj_root = get_proj_root()
+    data_dir = proj_root / "data" 
+
+    data_path = Path(data_dir)
+
+    files_list = []
     
-    # --- CONFIGURATION ---
-    TARGET_CSV = "./env_monitor_1_24_100.csv.monitor.csv" 
-    
-    try:
-        generate_learning_curve(
-            csv_filepath=TARGET_CSV, 
-            window_size=10000,          
-            learned_threshold=10    
-        )
-    except Exception as e:
-        print(f"Error: {e}")
+    for filepath in data_path.rglob('*'):
+        
+        print(filepath)
+
+

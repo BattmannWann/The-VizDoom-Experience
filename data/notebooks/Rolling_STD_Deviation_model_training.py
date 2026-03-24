@@ -49,7 +49,7 @@ def get_graphs(file_list, model_type = "baseline"):
             generate_large_learning_curve(
                 csv_filepath=file, 
                 window_size=10000,       
-                learned_thresholds=[-5, -1, 0, 5, 10],     
+                learned_thresholds=[-20, -10, -5, -1, 0, 5, 10],     
                 max_plot_points=5000,
                 save_dir = graph_dir / f"{model_type}_models"    
             )

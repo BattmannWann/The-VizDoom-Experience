@@ -79,8 +79,6 @@ train_model() {
     cd "${SCRIPTS_TEST_DIR}" || true
 }
 
-#/data/model_performance_data/"
-#results/TEST_RUN.txt
 
 run_model() {
 
