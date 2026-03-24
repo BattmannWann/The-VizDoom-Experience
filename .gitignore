@@ -20,7 +20,7 @@ logs*
 _vizdoom.ini
 vizdoom.ini
 *.dbs
-
+videos/
 trained_models/
 results/
 
