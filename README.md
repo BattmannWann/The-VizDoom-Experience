@@ -9,11 +9,11 @@
 
 Welcome to the ViZDoom Experience. This repository serves the basis for research and investigation for the fourth year individual project at the University of Glasgow Computing Science Degree. This project is worth 40 credits. For more information, visit the [course catalogue](https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI4025P). 
 
-Before diving into the content, hypotheses, or the report, it is important to understand what is being researched here. This will be discussed in the section below, but first some pre-requisite. 
+Before diving into the content, hypotheses, or the report, it is important to understand what is being researched here. This will be discussed in the section below, but first some pre-requisites. 
 
 ### What is ViZDoom?
 
->A "Doom-based AI research platform for reinforcement learning from raw visual information" based off of [ZDOOM](https://zdoom.org/) an "enhanced port of the Doom engine for running on modern operating systems" - *[ViZDoom](https://ViZDoom.cs.put.edu.pl/)*
+>A "Doom-based AI research platform for reinforcement learning from raw visual information" developed on top of [ZDOOM](https://zdoom.org/) an "enhanced port of the Doom engine for running on modern operating systems" - *[ViZDoom](https://ViZDoom.cs.put.edu.pl/)*
 
 This will be the basis of the project, used to answer the proposed research question. 
 
@@ -21,28 +21,30 @@ This will be the basis of the project, used to answer the proposed research ques
 
 ## Purpose and Aims
 
-The purpose of this project is to answer the following research question: "What effect does adding an active visual sensor have on model performance, where that model is trained using reinforcement learning using the ViZDoom software?"
+The purpose of this project is to answer the following research question: "*Does the addition of an active visual sensor in a reinforcement learning agent trained in a 3D environment result in a significant improvement in task performance?*"
 
 The aims can then be derived as follows:
 
-- **Create two model types**: Baseline and Active Vision
+- **Environment Development**: Design and develop custom, scalable 3D training scenarios utilising the ViZDoom research platform and the standardised Gymnasium API
 
-- **Train model types independently**: Thus, the baseline model and the active vision model will be trained on the proposed scenario(s) separately, where saved models are not used between these two types. 
+- **Agent Training**: Implement and train a baseline (passive) model and an active vision model. 
 
-- **Use statistical tests and plot figures to determine if the addition of a visual sensor adds significant improvement to model performance**
+- **Comparative Evaluation**: Evaluate and compare the efficacy of the active visual sensor against the baseline model across varied levels of environmental complexity, visual occlusion, and restricted fields of view.
+
+- **Generalisation Analysis**: Assess the generalisability of the learned active vision policies in unseen, dynamic environments, addressing a core challenge in current DRL literature. 
 
 
 ### How Will this be Achieved?
 
 The project is going to be developed in the following ways:
 
-- Models will be trained using the `Stable Baselines 3` reinforcement learning (RL) framework, which acts as a wrapper around the Gymnasium framework, to provide easy access to common RL models and streamline the training process. 
+- Models will be trained using the `Stable-Baselines3 PPO` architecture. 
 
-- To train models, custom gymnasium environments need to be created for the custom task scenarios; one for the baseline and another for the active vision model.
+- To train models, custom gymnasium environments will be created for the custom task scenarios; one for the baseline and another for the active vision model.
 
-- Training scripts will be developed to create the custom Gym environments and train PPO models in a curriculum learning approach (see the README.md files under the scenario directory)
+- Training scripts will be developed to create the custom Gym environments and train PPO models independently (i.e. one model per level, trained from scratch)
 
-- Custom DOOM Maps/configurations need to be developed to present an environment to a model. This requires the creation of `.cfg` and `.wad` files. More information can be found in their respective directories (e.g. `config_files/` and `wad_files` and on the GitHub Wiki). 
+- Custom DOOM Maps/configurations will be developed to present an environment to a model. This requires the creation of `.cfg` and `.wad` files. More information can be found in their respective directories (e.g. [`config_files/`](https://github.com/BattmannWann/The-VizDoom-Experience/tree/main/src/scenarios/CacodemonRecognition/config_files) and [`wad_files`](https://github.com/BattmannWann/The-VizDoom-Experience/tree/main/src/scenarios/CacodemonRecognition/wad_files) and on the [GitHub Wiki](https://github.com/BattmannWann/The-VizDoom-Experience/wiki)). 
 
 - Model evaluation script(s) required to test the saved trained models during the training phase (models are saved at a 25,000 steps interval)
 
@@ -55,10 +57,21 @@ This project has the following directory structures:
 ```
 The-ViZDoom-Experience/
 ├── data/
+│   ├── Graphs
+│   │   ├── Evaluations/                # Graphs created on analysis of the evaluation logs
+│   │   └── Training_Graphs/            # Graphs on model training (steps with cumulative reward)
+│   │ 
 │   ├── README.md                       # Description of data sources
-│   ├── model_performance_data/         # Evaluation metrics, logs, plots
-│   ├── notebooks/                      # Jupyter Notebooks used to visualise data from evaluations
-│   └── trained_models/                 # Saved trained models
+│   ├── model_performance_data/         # Logs from model evaluation
+│   ├── notebooks/                      # Jupyter Notebooks and Python Scripts used to visualise data from evaluations
+│   │
+│   ├── visualisations/                 # Figures providing additional visualisations 
+│   │   ├── map_overviews/              # In-game, 2D, and 3D overviews of each map in the Cacodemon Recognition scenario
+│   │   ├── model_evals/                # Frame-by-frame visualisations of model performances 
+│   │   ├── original_preduction_images/ # Images before they were reduced and rescaled 
+│   │   └── reduction_rescaled_images/  # Images that have been reduced and rescaled to demonstrate the active vision FOVs 
+│   │ 
+│   └── trained_models/                 # Saved trained models (does not come by standard with a `git clone`)
 │
 ├── meetings/
 │   └── README.md                       # Weekly supervisor meeting minutes
@@ -66,43 +79,49 @@ The-ViZDoom-Experience/
 ├── presentation/
 │   ├── slides/                         # PowerPoint and PDF presentations
 │   ├── figures/                        # Images and diagrams
-│   └── references.md
+│   └── references.md                   # Slide bibliography
 │
 ├── src/
 │   ├── mods/                           # ViZDoom / Doom modifications
+│   │   └── Pain_Elemental_Mod.pk3      # Mod that changes the death behaviour of the Pain Elemental enemy
 │   │
 │   ├── scenarios/
 │   │   └── CacodemonRecognition/
-│   │       ├── config_files/
+│   │       ├── All_Logs/                                           # Logs generated during model training for all model types
+│   │       │   ├── Active_Vision/
+│   │       │   ├── Baseline/
+│   │       │   └── logs_active_different_seeds/
+│   │       │
+│   │       ├── config_files/                                       # Scenario configuration files that handle WAD, pk3, and game variables
 │   │       │   ├── Cacodemon_Recognition_most_basic.cfg
 │   │       │   ├── Cacodemon_Recognition_basic.cfg
 │   │       │   ├── Cacodemon_Recognition_Final.cfg
 │   │       │   └── README.md
 │   │       │
 │   │       │
-│   │       ├── training_files/
-│   │       │   ├── active_vision_model_training/
+│   │       ├── training_files/                                     # Files used for model training
+│   │       │   ├── active_vision_model_training/                   # Scripts for training the active vision models
 │   │       │   │   ├── active_visual_model_training_lvl_1.py
-│   │       │   │   ├── active_visual_model_training_lvl_2.py
-│   │       │   │   └── active_visual_model_training_lvl_3.py
+│   │       │   │   └── active_visual_model_training_lvl_2.py
 │   │       │   │
-│   │       │   ├── baseline_model_training/
+│   │       │   ├── baseline_model_training/                        # Scripts for training the baseline models
 │   │       │   │   ├── baseline_training_lvl_1.py
-│   │       │   │   ├── baseline_training_lvl_2.py
-│   │       │   │   └── baseline_training_lvl_3.py
+│   │       │   │   └── baseline_training_lvl_2.py
 │   │       │   │
-│   │       │   ├── envs/
+│   │       │   ├── envs/                                           # Gymnasium environments for Active & Baseline
 │   │       │   │   ├── Active_Visual_Cacodemon_Recognition_env.py
 │   │       │   │   └── Baseline_Cacodemon_Recognition_env.py
 │   │       │   │
-│   │       │   ├── example_files/
+│   │       │   ├── example_files/                                  # Primitive ViZDoom usage, using handcrafted rules (NO TRAINING)
 │   │       |   │   ├── simple_random_action_model.py
 │   │       |   │   └── simple_random_action_model_manual_rewards.py
 |   |       |   |
-│   │       |   ├── model_evaluation/
-│   │       │       └── run_model.py
+│   │       |   └── model_evaluation/                               # Scripts used to evaluate trained models
+│   │       │       ├── run_model.py                                # Loads PPO and environments and then runs a saved model
+│   │       │       ├── evaluate_models.sh                          # Uses the run_model.py script to evaluate EVERY model
+│   │       │       └── record_performance.sh                       # Records the evaluations of all models, up to 10 episodes
 │   │       │
-│   │       ├── wad_files/
+│   │       ├── wad_files/                                          # WAD Files for the different levels of the scenario
 │   │       │   ├── ACS_Scripts/
 │   │       │   │   ├── Cacodemon_Recognition_most_basic.acs
 │   │       │   │   ├── Cacodemon_Recognition_basic.acs
@@ -114,14 +133,27 @@ The-ViZDoom-Experience/
 │   │       │
 │   │       ├── README.md
 │   │       └── user_manual.md
+│   │ 
+│   ├── tests/                                  # Test directory for testing project aspects
+│   │   ├── bash_scripts/                       # Scripts to be executed in the command line
+│   │   │   ├── Cacodemon_Recognition_tests.sh  # Tests that the training of models can be carried out successfully on the system
+│   │   │   └── Project_integrity_tests.sh      # Ensures that the project has been cloned/pulled correctly
+│   │   │
+│   │   └── Python_scripts/                     # Specific tests for Python files
+│   │       ├── test_envs.py                    # Tests that the Gymnasium environments have been setup correctly
+│   │       ├── test_model_training.py          # Tests for model training. More intricate than the broad bash script
+│   │       └── test_run_model.py               # Ensures that the model evaluation python script works as intended, testing all features
 │   │
 │   └── README.md                       # Source-level overview
 │
-├── .gitignore
+├── .coveragerc                         # Exceptions for the PyTest coverage module (print statements and if main statements)
+├── .gitignore                          # Files that the VC system should ignore
 ├── plan.md                             # Project plan / milestones
-├── timelog.md                          # Time tracking
-├── requirements.txt
-└── README.md                           # Project overview
+├── pytest.ini                          # Sets up the PyTest module, pointing to directories and runtime instructions
+├── README.md                           # Project overview
+├── requirements.txt                    # Dependencies list (pip)
+├── setup_project.sh                    # A helper script that can download the trained models, create virtual environments, and run project tests
+└── timelog.md                                     
 
 ```
 
@@ -155,7 +187,7 @@ Most of the other requirements are installed by these dependencies.
 
 ### Build Steps
 
-The following assumes a **UNIX SYSTEM** (e.g. a Linux distribution or WSL). It can be done on other systems but a warning is issued as this has **NOT** been tested:
+The following assumes a **UNIX SYSTEM** (e.g. a Linux distribution or WSL). It can be done on **other systems** but a warning is issued as this has **NOT** been tested:
 
 ```bash
 
@@ -184,9 +216,52 @@ See the following if more information is needed:
 
 - [Installing ViZDoom](https://github.com/Farama-Foundation/ViZDoom#python-quick-start)
 
+
+<br>
+
+#### Alternative Method
+
+The `setup_project.sh` script, found in project root, has a function that will handle the creation of a virtual environment for you, installing dependencies and activating it.
+
 ---
 
 ### Test Steps
+
+In this project are two types of tests:
+
+1. Bash Script Testing: Ensures that the project has been setup properly and can run on the host system
+2. Python Script Testing: Specific tests for the Python files used in this project
+
+Assumptions:
+
+- You are in the project root to start with
+- Your virtual environment has been activated
+- You have permission to change file permissions (if not, replace `./` with `source`)
+
+
+Instructions to run these tests are as follows:
+
+
+#### Bash Tests
+
+```bash
+$ cd src/tests/bash_scripts/  #Assuming you are in the project root directory
+$ chmod +x Cacodemon_Recognition_tests.sh Project_integrity_tests.sh
+
+$ ./Cacodemon_Recognition_tests.sh
+$ ./Project_integrity_tests.sh
+
+```
+
+#### Python Tests
+
+```bash
+$ cd src/tests/Python_scripts/
+$ python -m pytest
+
+```
+
+On running these tests, a coverage report will also be created and displayed on the terminal. It will also create an html page under `htmlcov/`
 
 ---
 
@@ -204,6 +279,7 @@ I am more than happy to discuss the project at any stage and provide demonstrati
 - Learning of technologies has finished [week of 03/11/2025]
 - Gymnasium Environments Developed [week of 05/01/2026]
 - Baseline model training completed [week of 19/01/2026]
+- Dissertation has been written and source code finished [week of 26/03/2026]
 
 ---
 
