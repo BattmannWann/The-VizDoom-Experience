@@ -38,7 +38,7 @@ download_and_handle_models() {
 
     #"https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0?download=1"
     
-    wget -a error.log --show-progress -O all_trained_models.zip "https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0?download=1"
+    wget -a error.log --show-progress -O all_trained_models.zip "https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQBTzkvv-PcJSJIbJOtvm-m2AcHyHoK17hxcoV74BWWKldQ?download=1"
     mv all_trained_models.zip "${PROJ_DIR}/data/" 2>> error.log
 
     cd "${PROJ_DIR}/data/" || true

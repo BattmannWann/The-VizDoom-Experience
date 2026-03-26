@@ -14,8 +14,11 @@ The files found in this directory are as follows (under the naming convention `C
 
 - ***...Final.cfg***: Points to `Cacodemon_Recognition_Final.wad`
 
+<br>
 
-How to calculate it -> using this formula:
+For the most part, the configurations are self explanatory. However, the following might not be clear as to how it was determined:
+
+How to calculate episode timeout? $\rightarrow$ use this formula:
 $$\text{Tics} = \text{Seconds} \times 35$$
 
 

@@ -1,9 +1,8 @@
 # User Guide
 
-#### A guide to the [software_name_here] software, written by Rhys Stewart [date_here]
+#### A guide to The ViZDoom Experience, written by Rhys Stewart 26/03/2026
 
-This is the markdown version for the [GitHub repository](url_here). On this link, a PDF copy can be found if preferred. 
-
+##### This is the User Guide for the source code, which can be found in the [GitHub repository](https://github.com/BattmannWann/The-VizDoom-Experience/tree/main).
 ---
 
 ## Contents
@@ -11,8 +10,22 @@ This is the markdown version for the [GitHub repository](url_here). On this link
 ### 1. Introduction
 
 ### 2. Prerequisites
+    2.1 Basic Environment Requirements
+        2.1.1 Alternative Installation Method
 
-### 3. Running Project Files
+### 3. Viewing and Editing `.wad` and `.acs` Files
+
+### 4. Training Models
+
+### 5. Training Evaluation
+
+### 6. Model Evaluation
+    6.1 Baseline Evaluation 
+    6.2 Active Vision Evaluation
+
+### 7. Testing
+    7.1 Bash Scripts
+    7.2 Python Scripts
 
 ---
 
@@ -83,6 +96,15 @@ $ pip install -r requirements.txt
 > Instructions for this step can also be found in the project's `README.md`, but, for the sake of a comprehensive user guide, they will also be included here
 
 
+#### Alternative Installation Method
+
+Alternatively, once you have cloned or pulled the repository, the `setup_project.sh` script can be used to create a virtual environment in the correct place, automatically install the dependencies, and active the virtual environment for you. 
+
+To use this script, simply supply the following command into your terminal:
+
+`$ source setup_project.sh`
+
+
 ---
 
 ## Viewing and Editing `.wad` and `.acs` Files
@@ -116,11 +138,11 @@ Then, you have two options:
     - Open the codebase in some form of IDE or code editor (e.g. VSCode) 
     - Navigate to the level 1 baseline training file and ensure to edit the three following lines$^{1}$:
 
-       - **Line 15**: Keep `../models_baseline/` and select a name for the model directory that models will be saved to. For example: `../models/baseline/Cacodemon_Recognition_1`. This is responsible for naming the saved models directory
+       - **Line ~74**: Keep `../models_baseline/` and select a name for the model directory that models will be saved to. For example: `../models/baseline/Cacodemon_Recognition_1`. This is responsible for naming the saved models directory. Do the same for the logs directory.
 
-       - **Line 30**: Keep `base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors",` and change the last argument to the name you would like. For example: `env_monitor_Cacodemon_Recognition_1`. This is responsible for naming the env_monitor file (used for additional information gathering, may not be needed).
+       - **Line ~28**: Keep `base = Monitor(base, filename = os.path.join(f"{logs_directory}/env_monitors",` and change the last argument to the name you would like. For example: `env_monitor_Cacodemon_Recognition_1`. This is responsible for naming the env_monitor file (used for additional information gathering, may not be needed).
 
-       - **Line 221**: Keep `model.learn(total_timesteps = timesteps, reset_num_timesteps = False, tb_log_name = f"` and change the name of the file in the f-string. For example: `Cacodemon_Recognition_1`. This is responsible for naming the log directory of the model as it trains. These logs can then be inspected using tensorboard (see []()). 
+       - **Line ~171**: Change the name of the file in the f-string. For example: `Cacodemon_Recognition_1`. This is responsible for naming the log directory of the model as it trains. These logs can then be inspected using tensorboard (see the Training Evaluation section below). 
 
     - Then, run the following command to being training:
 
@@ -141,11 +163,29 @@ $ python -m active_vision_model_training.active_visual_model_training_lvl_1
 <br>
 
 For different levels, the same rules apply, but the line numbers may be different. The code to modify will be around the same place. 
+In a future, ideal version, these would be handled by `argparse`, passed into the Python file as arguments.
 
 ---
 >
 > ###### $^{1}$: These line numbers may change, but the rough location should remain the same. If this changes, these will be updated accordingly
 >
+---
+
+## Training Evaluation
+
+Installed in the dependencies is `Tensorboard`, an excellent tool used to monitor the progress of model training, looking at the cumulative reward, number of steps, entropy, and numerous other metrics. 
+
+To use tensorboard, issue the following commands into your terminal:
+
+```bash
+#change into the directory that contains the logs directory; for example, the project comes with logs already
+$ cd src/scenarios/CacodemonRecognition/
+
+#Note that you will not be able to run the whole All_Logs directory, as there are too many files
+$ tensorboard --logdir All_Logs/Baseline/
+
+```
+
 ---
 
 ## Model Evaluation
@@ -155,6 +195,10 @@ In the repository, there is a folder which contains a python script to load and 
 To run a model, there are several available commands to use and depend entirely on what you desire. To see the list of commands, issue the following:
 
 ```bash
+#change into the training_files/ directory of the Cacodemon Recognition scenario
+$ cd src/scenarios/CacodemonRecognition/training_files/
+
+#run the model_evaluation script run_model.py
 $ python -m model_evaluation.run_model --help
 
 ```
@@ -164,7 +208,13 @@ To run a model, you MUST have a saved model. As part of the project, you can fin
 An example will be illustrated below:
 
 ```bash
-$  python -m model_evaluation.run_model --in-model-path ../models_baseline/Level 1/model_2450000.zip --sleep 0.035 --config-path 0 --episodes 10
+
+#without the line breaks. For convenience, during development, you can copy/move the models into the training_files/ directory
+
+$  python -m model_evaluation.run_model --in-model-path 
+    /home/username/projects/The-VizDoom-Experience/data/trained_models/
+    Cacodemon_Recognition_baseline_models/Level 1/model_2450000.zip 
+    --sleep 0.035 --config-path 0 --episodes 10
 ```
 
 What this does:
@@ -176,58 +226,133 @@ What this does:
 
 <br><br>
 
-Assuming you have downloaded the following [folders]("https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQDq1_HvkM2rRaXj7agr07ocARJp2bzkpMitYGSAinJOiW0"), here are some evaluation commands for each type and each level within each type of model, for convenience:
+Assuming you have downloaded the following [folders](https://gla-my.sharepoint.com/:u:/g/personal/2682261s_student_gla_ac_uk/IQBTzkvv-PcJSJIbJOtvm-m2AcHyHoK17hxcoV74BWWKldQ?e=C1feka), here are some evaluation commands for each type and each level within each type of model, for convenience:
 
-## Active Models
+> in your terminal, you can create variables to avoid typing out the full model directories
+> using `$ export BASELINE_DIR="/home/username/projects/The-VizDoom-Experience/data/trained_models/Cacodemon_Recognition_baseline_models"`
 
+### Baseline Evaluation
 
-### **Level 1**:
+**LEVEL 1**
+`python -m model_evaluation.run_model --in-model-path "${BASELINE_DIR}/Level 1/model_2450000.zip" --config-path 0 --episodes 100 --output baseline_lvl_1_model`
 
-- **100%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_24_100/model_1275000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 0 --episodes 10`
-
-- **80%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_16_80/model_1575000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 80 --episodes 10`
-
-- **60%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_23_60/model_1950000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 60 --episodes 10`
-
-- **40%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_18_40/model_3025000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 40 --episodes 10`
-
-- **20%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_19_20/model_1975000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 20 --episodes 10`
-
-- **10%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_20_10/model_2000000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 10 --episodes 10`
-
-- **5%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_21_5/model_2100000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 5 --episodes 10`
-
-- **1%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 1/Cacodemon_Recognition_1_22_1/model_2100000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 0 --reduction 1 --episodes 10`
+**LEVEL 2**
+`python -m model_evaluation.run_model --in-model-path "${BASELINE_DIR}/Level 2/model_3720000.zip" --config-path 1 --episodes 100 --output baseline_lvl_2_model`
 
 ---
 
-### **Level 2**:
+### Active Vision Evaluation
 
-- **100%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_26_100/model_4700000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 0 --episodes 10`
+**LEVEL 1**
 
-- **80%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_19_80/model_6350000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 80 --episodes 10`
+- $100$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/100_model_1275000.zip" --active "true" --config-path 0 --reduction 0 --episodes 100 --output active_lvl_1_100_model`
 
-- **60%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_20_60/model_6475000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 60 --episodes 10`
+- $80$%: 
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/80_model_1575000.zip" --active "true" --config-path 0 --reduction 80 --episodes 100 --output active_lvl_1_80_model`
 
-- **40%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_21_40/model_3000000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 40 --episodes 10`
+- $60$%: 
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/60_model_1950000.zip" --active "true" --config-path 0 --reduction 60 --episodes 100 --output active_lvl_1_60_model`
 
-- **20%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_22_20/model_6850000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 20 --episodes 10`
+- $40$%: 
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/40_model_3025000.zip" --active "true" --config-path 0 --reduction 40 --episodes 100 --output active_lvl_1_40_model`
 
-- **10%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_23_10/model_2650000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 10 --episodes 10`
+- $20$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/20_model_1975000.zip" --active "true" --config-path 0 --reduction 20 --episodes 100 --output active_lvl_1_20_model`
 
-- **5%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_24_5/model_2800000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 5 --episodes 10`
+- $10$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/10_model_2000000.zip" --active "true" --config-path 0 --reduction 10 --episodes 100 --output active_lvl_1_10_model`
 
-- **1%**: `python -m model_evaluation.run_model --in-model-path ../models_active/Rescaled/Level\ 2/Cacodemon_Recognition_2_27_1/model_4775000.zip --sleep 0.035 --active "true" --verbose "true" --config-path 1 --reduction 1 --episodes 10`
+- $5$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/5_model_2100000.zip" --active "true" --config-path 0 --reduction 5 --episodes 100 --output active_lvl_1_5_model`
+
+- $1$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 1/1_model_2100000.zip" --active "true" --config-path 0 --reduction 1 --episodes 100 --output active_lvl_1_1_model`
 
 ---
 
-<br>
+**LEVEL 2**:
 
-## Baseline Models
+- $100$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/100_model_4700000.zip" --active "true" --config-path 1 --reduction 0 --episodes 100 --output active_lvl_2_100_model.txt`
 
-- **Level 1**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 1/model_2450000.zip --sleep 0.035 --verbose "true" --config-path 0 --episodes 10`
+- $80$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/80_model_6350000.zip" --active "true" --config-path 1 --reduction 80 --episodes 100 --output active_lvl_2_80_model`
 
-- **Level 2**: `python -m model_evaluation.run_model --in-model-path ../models_baseline/Level\ 2/CacodemonRecognition_2_7/model_2275000.zip --sleep 0.035 --verbose "true" --config-path 1 --episodes 10`
+- $60$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/60_model_6475000.zip" --active "true" --config-path 1 --reduction 60 --episodes 100 --output active_lvl_2_60_model`
 
+- $40$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/40_model_3000000.zip" --active "true" --config-path 1 --reduction 40 --episodes 100 --output active_lvl_2_40_model`
+
+- $20$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/20_model_6850000.zip" --active "true" --config-path 1 --reduction 20 --episodes 100 --output active_lvl_2_20_model`
+
+- $10$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/10_model_2650000.zip" --active "true" --config-path 1 --reduction 10 --episodes 100 --output active_lvl_2_10_model`
+
+- $5$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/5_model_2800000.zip" --active "true" --config-path 1 --reduction 5 --episodes 100 --output active_lvl_2_5_model`
+
+- $1$%:
+`python -m model_evaluation.run_model --in-model-path "${ACTIVE_DIR}/Level 2/1_model_4775000.zip" --active "true" --config-path 1 --reduction 1 --episodes 100 --output active_lvl_2_1_model`
 
 ---
+
+## Testing
+
+To test the various aspects of this project, two test suites have been created:
+
+1. `bash_scripts`: A directory containing bash scripts used for testing running commands and project integrity
+    - `Cacodemon_Recognition_tests.sh`: Actually runs the training and evaluation Python scripts, rather than mock tests
+    - `Project_integrity_tests.sh`: Ensures that the project has been successfully cloned/pulled
+
+2. `Python_scripts`: Used to test the various Python files used throughout this project. Explicitly, these are 
+    - `test_envs`: Tests for the Gymnasium environments
+    - `test_model_training.py`: Granular tests for the model training files, testing all the methods and overall functionality
+    - `test_run_model`: Tests the argument passing and general functionalities of the run_model file
+
+
+There are two methods to run these tests:
+
+1. Automatically using the `setup_project.sh` script, which runs all project tests
+2. Manually running each test 
+
+As instructions are provided by the `setup_project.sh` script, the following will detail running tests manually:
+
+
+### Bash Tests
+
+```bash
+
+#change into the bash_scripts/ directory
+$ cd src/tests/bash_scripts/  
+
+#provide the scripts with execution privileges
+$ chmod +x Cacodemon_Recognition_tests.sh Project_integrity_tests.sh
+
+#run the Cacodemon Recognition tests
+$ ./Cacodemon_Recognition_tests.sh
+
+#run the project integrity tests
+$ ./Project_integrity_tests.sh
+
+```
+
+---
+
+### Python Tests
+
+```bash
+#change into the Python_scripts/ directory
+$ cd src/tests/Python_scripts/
+
+#run the tests using the pytest module
+$ python -m pytest
+
+```
+
+On running these tests, a coverage report will also be created and displayed on the terminal. It will also create an html page under `htmlcov/`.
+
+---
+

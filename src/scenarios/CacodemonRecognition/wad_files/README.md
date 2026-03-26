@@ -9,11 +9,15 @@
 
 This folder contains the following WAD files (all begin with Cacodemon_Recognition_...):
 
-- ***...most_basic.wad***: This is the most basic map for the Cacodemon Recognition training scenario. The map features 2 Cacodemons and very simple sector mapping images (different mapping for the floor, ceiling, and walls). The resources for this map consist of the `gzdoom.pk3` and `DOOM2.wad` files.
+- ***...most_basic.wad***: This is the most basic map for the Cacodemon Recognition training scenario. The map features a Cacodemon enemy and very simple sector mapping images (different mapping for the floor, ceiling, and walls). The resources for this map consist of the `gzdoom.pk3` and `DOOM2.wad` files.
 
-- ***...basic.wad***: This is a little more advanced map for the Cacodemon Recognition scenario, featuring 3 additional enemies called 'Lost Souls' and some additional environmental clutter through green torches placed throughout the map. This adds difficulty for the agent, by obscuring the goal of killing the Cacodemons through distractors. The resources for this map consist of the `gzdoom.pk3` and `DOOM2.wad` files.
+- ***...basic.wad***: This is a little more advanced map for the Cacodemon Recognition scenario, featuring 2 additional enemies called 'Lost Souls' and the `Pain Elemental` enemy, along with some additional environmental clutter through green torches placed throughout the map. This adds difficulty for the agent, by obscuring the goal of killing the Cacodemon through distractors. The resources for this map consist of the `gzdoom.pk3`, `Pain_Elemental_Mod.pk3`, and `DOOM2.wad` files.
 
-- ***...Final.wad***: This is the most advanced map, featuring several types of enemy (Cacodemon, Lost Soul, Cyber Demon, Pain Elemental, and Former Human) along side the visual clutter from the torches. This is to really hone in on the agent's ability to search and recognise the Cacodemon. The resources for this map consist of the `gzdoom.pk3`, `DOOM2.wad`, and `Pain_Elemental_Mod.pk3` files. The mod file contains special characteristics for the `Pain Elemental` "DOOM thing" such that when it dies, it does not behave as normal (stopped it from spawning Lost Souls on death which would otherwise attack the player).
+- ***...Final.wad***: This is the most advanced map, featuring several types of enemy (Cacodemon, Lost Soul, Cyber Demon, Pain Elemental, and Former Human/Zombieman) along side the visual clutter from the torches. This is to really hone in on the agent's ability to search and recognise the Cacodemon. The resources for this map consist of the `gzdoom.pk3`, `DOOM2.wad`, and `Pain_Elemental_Mod.pk3` files. 
+
+<br>
+
+>The mod file `Pain_Elemental_Mod.pk3` contains special characteristics for the `Pain Elemental` "DOOM thing" such that when it dies, it does not behave as normal (stopped it from spawning Lost Souls on death which would otherwise attack the player).
 
 <br>
 
@@ -35,7 +39,7 @@ This folder contains the following WAD files (all begin with Cacodemon_Recogniti
     - Negative rewards for shooting the gun
     - Negative rewards for killing the incorrect enemy type
     - Positive rewards for killing the correct enemy type
-    - How the episode finishes; specified enemy in question needs to have been killed (for this scenario, all Cacodemons must be killed)
+    - How the episode finishes; specified enemy in question needs to have been killed (for this scenario, the Cacodemon must be killed)
 
     The scripts have been written in a way to promote modularity, such that they can be reused and little work needs to be done to change their function(s). 
 
